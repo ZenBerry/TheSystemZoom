@@ -16,14 +16,22 @@ app.get('/api/passwords', (req, res) => {
     generatePassword(12, false)
   )
 
-  console.log(passwords)
+
 
   const myVar = [24]
 
   // Return them as json
   res.json(myVar);
 
-  console.log(`Sent ${count} passwords`);
+  // console.log(`Sent ${count} passwords`);
+});
+
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
+
+app.post('/api/passwords', (req, res) => {
+res.json(req.body.title);
+console.log(req.body.title)
 });
 
 // The "catchall" handler: for any request that doesn't
@@ -32,9 +40,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
-app.post('/api/passwords', (req, res) => {
-res.json("Haha");
-});
+
 
 const port = process.env.PORT || 5000;
 app.listen(port);

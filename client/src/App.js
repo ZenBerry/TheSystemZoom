@@ -1,72 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
-class App extends Component {
-  // Initialize state
-  state = { passwords: [], response: "Hm" }
+function App() {
 
-  // Fetch passwords after first mount
-  componentDidMount() {
-    this.getPasswords();
-    // Simple POST request with a JSON body using axios
-    const article = { title: 'React POST Request Example' };
-    axios.post('/api/passwords', article)
-        .then(response => this.setState({ response: response.data }));
-  }
+
+  const [response,setResponse] = useState('Loading...')
+  const [passwords,setPasswords] = useState([])
+  const [myVar,setMyVar] = useState(42)
 
 
 
-  getPasswords = () => {
+
+
+
+  const getData = () => {
     // Get the passwords and store them in state
     fetch('/api/passwords')
       .then(res => res.json())
-      .then(passwords => this.setState({ passwords }));
+      .then(passwords => setPasswords(passwords) );
   }
 
-  render() {
-    const { passwords } = this.state;
+  useEffect(() => { 
+      getData();
+
+      // Simple POST request with a JSON body using axios
+      const article = { title: myVar };
+      axios.post('/api/passwords', article)
+          .then(response => setResponse(response.data) );
+  
+   
+      }, [myVar])
+
+    function handleClick() {
+      setMyVar(prev => prev+1)
+    }
+
+
 
     return (
       <div className="App">
-      {this.state.response}
-        {/* Render the passwords if we have them */}
-        {passwords.length ? (
-          <div>
-            <h1>5 Passwords.</h1>
-            <ul className="passwords">
-              {/*
-                Generally it's bad to use "index" as a key.
-                It's ok for this example because there will always
-                be the same number of passwords, and they never
-                change positions in the array.
-              */}
-              {passwords.map((password, index) =>
-                <li key={index}>
-                  {password}
-                </li>
-              )}
-            </ul>
-            <button
-              className="more"
-              onClick={this.getPasswords}>
-              Get More
-            </button>
-          </div>
-        ) : (
-          // Render a helpful message otherwise
-          <div>
-            <h1>No passwords :(</h1>
-            <button
-              className="more"
-              onClick={this.getPasswords}>
-              Try Again?
-            </button>
-          </div>
-        )}
+      {response}
+
+      <button
+      onClick = {handleClick}
+      >
+
+      Hey
+
+      </button>
+
+       
       </div>
     );
-  }
+
 }
 
 export default App;
+
+
+
