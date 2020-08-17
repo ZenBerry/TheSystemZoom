@@ -16,8 +16,12 @@ app.get('/api/passwords', (req, res) => {
     generatePassword(12, false)
   )
 
+  console.log(passwords)
+
+  const myVar = [24]
+
   // Return them as json
-  res.json(passwords);
+  res.json(myVar);
 
   console.log(`Sent ${count} passwords`);
 });
@@ -26,6 +30,10 @@ app.get('/api/passwords', (req, res) => {
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
+app.post('/api/passwords', (req, res) => {
+res.json("Haha");
 });
 
 const port = process.env.PORT || 5000;

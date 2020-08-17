@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
+import axios from 'axios';
 
 class App extends Component {
   // Initialize state
-  state = { passwords: [] }
+  state = { passwords: [], response: "Hm" }
 
   // Fetch passwords after first mount
   componentDidMount() {
     this.getPasswords();
+    // Simple POST request with a JSON body using axios
+    const article = { title: 'React POST Request Example' };
+    axios.post('/api/passwords', article)
+        .then(response => this.setState({ response: response.data }));
   }
+
+
 
   getPasswords = () => {
     // Get the passwords and store them in state
@@ -22,6 +29,7 @@ class App extends Component {
 
     return (
       <div className="App">
+      {this.state.response}
         {/* Render the passwords if we have them */}
         {passwords.length ? (
           <div>
