@@ -38,7 +38,7 @@ app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.post('/api/passwords', (req, res) => {
 
-res.json(req.body.title); // Return them json
+
 
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
@@ -48,17 +48,33 @@ MongoClient.connect(url, function(err, db) {
 
 
 
+
+
   dbo.collection("people").updateOne(myquery, newvalues, function(err, res) {
     if (err) throw err;
     console.log("1 document updated");
     db.close();
   });
+
+
+
+  dbo.collection("people").find(myquery).toArray(function(err, result) {
+    if (err) throw err;
+    console.log(result[0].Note);
+    res.json(result[0].Note); // Return them json
+    // console.log(result[0].Name);
+    
+  });
+
+
+
 });
 
 
 
 
-console.log(req.body.title)
+
+
 });
 
 // The "catchall" handler: for any request that doesn't
