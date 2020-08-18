@@ -28,7 +28,7 @@ app.get('/api/passwords', (req, res) => {
     generatePassword(12, false)
   )
 
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, db) { 
     if (err) throw err;
     var dbo = db.db("test");
     var myquery = { Name: "Hey Hey, writing from React!" };
@@ -54,7 +54,7 @@ app.post('/api/passwords', (req, res) => {
 
 
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, {useUnifiedTopology: true}, function(err, db) {
   if (err) throw err;
   var dbo = db.db("test");
   var myquery = { Name: "Hey Hey, writing from React!" };
@@ -77,7 +77,7 @@ MongoClient.connect(url, function(err, db) {
     console.log(result[0].Note);
     res.json(result[0].Note); // Return them json
     // console.log(result[0].Name);
-    
+    db.close();
   });
 
 
