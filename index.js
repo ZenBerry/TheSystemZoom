@@ -2,6 +2,13 @@ const express = require('express');
 const path = require('path');
 const generatePassword = require('password-generator');
 
+const { MongoClient } = require("mongodb");
+const url = "mongodb+srv://zenberry:mongoPass8@cluster0-xmkeu.mongodb.net/sample_restaurants?retryWrites=true&w=majority";
+const client = new MongoClient(url);
+ 
+ // The database to use
+ const dbName = "test";
+
 const app = express();
 
 // Serve static files from the React app
@@ -30,7 +37,27 @@ app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.post('/api/passwords', (req, res) => {
-res.json(req.body.title);
+
+res.json(req.body.title); // Return them json
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("test");
+  var myquery = { Name: "Hey Hey, writing from React!" };
+  var newvalues = { $set: {Note : req.body.title} };
+
+
+
+  dbo.collection("people").updateOne(myquery, newvalues, function(err, res) {
+    if (err) throw err;
+    console.log("1 document updated");
+    db.close();
+  });
+});
+
+
+
+
 console.log(req.body.title)
 });
 

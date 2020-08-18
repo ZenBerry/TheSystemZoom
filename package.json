@@ -5,11 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
+    "mongodb": "^3.6.0",
     "password-generator": "^2.1.0"
   },
   "scripts": {
     "start": "node index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   }
-
- } 
+}
