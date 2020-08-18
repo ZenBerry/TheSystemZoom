@@ -15,6 +15,11 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Put all API endpoints under '/api'
+
+
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
+
 app.get('/api/passwords', (req, res) => {
   const count = 5;
 
@@ -23,18 +28,27 @@ app.get('/api/passwords', (req, res) => {
     generatePassword(12, false)
   )
 
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("test");
+    var myquery = { Name: "Hey Hey, writing from React!" };
+    var newvalues = { $set: {Note : req.body.title} };
+
+  dbo.collection("people").find(myquery).toArray(function(err, result) {
+    if (err) throw err;
+    console.log(result[0].Note);
+    res.json(result[0].Note); // Return them json
+    // console.log(result[0].Name);
+    
+  });
+
+  });
 
 
-  const myVar = [24]
-
-  // Return them as json
-  res.json(myVar);
 
   // console.log(`Sent ${count} passwords`);
 });
 
-app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.post('/api/passwords', (req, res) => {
 

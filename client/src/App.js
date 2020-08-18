@@ -14,39 +14,49 @@ function App() {
 
 
 
-  const getData = () => {
-    // Get the passwords and store them in state
-    fetch('/api/passwords')
-      .then(res => res.json())
-      .then(passwords => setPasswords(passwords) );
-  }
+  // const getData = () => {
+  //   // Get the passwords and store them in state
+  //   fetch('/api/passwords')
+  //     .then(response => setResponse(response.data) );
+  // }
+
 
   useEffect(() => { 
-      getData();
-
-      // Simple POST request with a JSON body using axios
-      const article = { title: myVar };
-      axios.post('/api/passwords', article)
-          .then(response => setResponse(response.data) );
   
+      console.log("ONCE")
+
+      axios.get('/api/passwords')
+            .then(res => {
+              setResponse(res.data)
+              setMyVar(res.data)
+            })
    
-      }, [myVar])
+      }, [])
+
+  
 
     function handleClick() {
       setMyVar(prev => prev+1)
+
+      axios.post('/api/passwords', { title: myVar+1 })
+          .then(response => setResponse(response.data) );
+      
+      
+      
     }
 
 
 
     return (
       <div className="App">
-      {response}
+      Response {response} <br/>
+      MyVar {myVar} <br/>
 
       <button
       onClick = {handleClick}
       >
 
-      Hey
+      Submit
 
       </button>
 
