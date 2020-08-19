@@ -7,7 +7,7 @@ function App() {
 
   const [response,setResponse] = useState('Loading...')
   const [passwords,setPasswords] = useState([])
-  const [myVar,setMyVar] = useState(42)
+  const [myVar,setMyVar] = useState(0)
 
   const [test,setTest] = useState("TEST")
 
@@ -26,13 +26,15 @@ function App() {
   // }
 
 
-  useEffect(() => { 
+  useEffect(() => {  //getting initial data once
   
       // console.log("ONCE")
 
       axios.get('/api/passwords')
             .then(res => {
               setValue(res.data)
+              setMyVar(res.data)
+              setResponse(res.data)
 
             })
    
@@ -51,14 +53,6 @@ function App() {
 
   
 
-    function handleClick() {
-      // setMyVar(5)
-
- 
-      
-      
-      
-    }
 
     function handleSubmit(e) {
       e.preventDefault();
@@ -70,6 +64,7 @@ function App() {
 
       } else {
        setValue((prev) => (prev+newData) ) 
+       setMyVar((prev) => (prev+newData) )
      }
       
 
@@ -93,7 +88,8 @@ function App() {
 
     return (
       <div className="App">
-      Cash {response} <br/>
+      Cash on server {response} <br/> <br/>
+      Cash locally {myVar} <br/> <br/>
 
     <form onSubmit={handleSubmit}>
       <label>
