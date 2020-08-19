@@ -44,7 +44,7 @@ function App() {
 
   useEffect(() => { 
       if (value != null){
-      axios.post('/api/passwords', { title: value, more: "Wee!" })
+      axios.post('/api/passwords', { title: value, more: newData })
      .then(response => setResponse(response.data) );
 
       }
@@ -92,7 +92,7 @@ function App() {
 
 
     return (
-      <div className="App">
+      <div className="App"> <h1>
 
       Cash {myVar} {myVar == response && "✅"} <br/> <br/>
 
@@ -101,9 +101,9 @@ function App() {
     <form onSubmit={handleSubmit}>
       <label>
         
-        <input type="text" name="name" value={formValue} onChange={handleChange} autocomplete="off" />
+        <input style={{fontSize: '50px'}} type="text" name="name" value={formValue} onChange={handleChange} autocomplete="off" />
       </label>
-      <input type="submit" value="OK" />
+      <input style={{fontSize: '50px'}} type="submit" value="OK" />
     </form>
 
 
@@ -114,7 +114,7 @@ function App() {
 
 
 
-
+    </h1>
 
 
        
