@@ -44,7 +44,7 @@ function App() {
 
   useEffect(() => { 
       if (value != null){
-      axios.post('/api/passwords', { title: value })
+      axios.post('/api/passwords', { title: value, more: "Wee!" })
      .then(response => setResponse(response.data) );
 
       }
@@ -94,7 +94,9 @@ function App() {
     return (
       <div className="App">
 
-      Cash {myVar} {myVar == response && "Synced"} <br/> <br/>
+      Cash {myVar} {myVar == response && "✅"} <br/> <br/>
+
+
 
     <form onSubmit={handleSubmit}>
       <label>

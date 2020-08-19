@@ -51,7 +51,7 @@ app.get('/api/passwords', (req, res) => {
 });
 
 
-app.post('/api/passwords', (req, res) => {
+app.post('/api/passwords', (req, res) => { //GETTING DATA FROM REACT
 
 
 
@@ -59,7 +59,7 @@ MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, 
   if (err) throw err;
   var dbo = db.db("test");
   var myquery = { Name: "Hey Hey, writing from React!" };
-  var newvalues = { $set: {Note : req.body.title} };
+  var newvalues = { $set: {Note : req.body.title, more: req.body.more} };
 
 
 
@@ -68,7 +68,7 @@ MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, 
   dbo.collection("people").updateOne(myquery, newvalues, function(err, res) {
     if (err) throw err;
     console.log("1 document updated");
-    db.close();
+    
     
   });
 
