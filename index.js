@@ -39,6 +39,7 @@ app.get('/api/passwords', (req, res) => {
     console.log(result[0].Note);
     res.json(result[0].Note); // Return them json
     // console.log(result[0].Name);
+    db.close();
     
   });
 
@@ -67,6 +68,7 @@ MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, 
   dbo.collection("people").updateOne(myquery, newvalues, function(err, res) {
     if (err) throw err;
     console.log("1 document updated");
+    db.close();
     
   });
 
@@ -77,6 +79,7 @@ MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, 
     console.log(result[0].Note);
     res.json(result[0].Note); // Return them json
     // console.log(result[0].Name);
+    db.close();
     
   });
 

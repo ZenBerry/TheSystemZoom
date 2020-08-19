@@ -9,6 +9,11 @@ function App() {
   const [passwords,setPasswords] = useState([])
   const [myVar,setMyVar] = useState(42)
 
+  const [test,setTest] = useState("TEST")
+
+  const [value,setValue] = useState(null)
+  const [newData,setNewData] = useState(0)
+
 
 
 
@@ -23,42 +28,91 @@ function App() {
 
   useEffect(() => { 
   
-      console.log("ONCE")
+      // console.log("ONCE")
 
       axios.get('/api/passwords')
             .then(res => {
-              setResponse(res.data)
-              setMyVar(res.data)
+              setValue(res.data)
+
             })
    
       }, [])
 
+  useEffect(() => { 
+      if (value != null){
+      axios.post('/api/passwords', { title: value })
+     .then(response => setResponse(response.data) );
+
+      }
+   
+      }, [value])
+
+
+
   
 
     function handleClick() {
-      setMyVar(prev => prev+1)
+      // setMyVar(5)
 
-      axios.post('/api/passwords', { title: myVar+1 })
-          .then(response => setResponse(response.data) );
+ 
       
       
       
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+
+
+      
+      if (Number.isNaN(newData) == true){
+        alert("wrong number!")
+
+      } else {
+       setValue((prev) => (prev+newData) ) 
+     }
+      
+
+
+
+    }
+
+
+    function handleChange(e) {
+
+      setNewData(Number(e.target.value)) 
+    
+
+
+
+      
+
     }
 
 
 
     return (
       <div className="App">
-      Response {response} <br/>
-      MyVar {myVar} <br/>
+      Cash {response} <br/>
 
-      <button
-      onClick = {handleClick}
-      >
+    <form onSubmit={handleSubmit}>
+      <label>
+        
+        <input type="text" name="name" onChange={handleChange} autocomplete="off" />
+      </label>
+      <input type="submit" value="OK" />
+    </form>
 
-      Submit
 
-      </button>
+    <br/> <br/>
+
+
+
+
+
+
+
+
 
        
       </div>
