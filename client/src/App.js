@@ -7,12 +7,14 @@ function App() {
 
   const [response,setResponse] = useState('Loading...')
   const [passwords,setPasswords] = useState([])
-  const [myVar,setMyVar] = useState(0)
+  const [myVar,setMyVar] = useState("loading...")
 
   const [test,setTest] = useState("TEST")
 
   const [value,setValue] = useState(null)
   const [newData,setNewData] = useState(0)
+
+  const [formValue, setFormValue] = useState("")
 
 
 
@@ -66,6 +68,8 @@ function App() {
        setValue((prev) => (prev+newData) ) 
        setMyVar((prev) => (prev+newData) )
      }
+
+      setFormValue("") 
       
 
 
@@ -76,6 +80,7 @@ function App() {
     function handleChange(e) {
 
       setNewData(Number(e.target.value)) 
+      setFormValue(e.target.value) 
     
 
 
@@ -88,13 +93,13 @@ function App() {
 
     return (
       <div className="App">
-      Cash on server {response} <br/> <br/>
-      Cash locally {myVar} <br/> <br/>
+
+      Cash {myVar} {myVar == response && "Synced"} <br/> <br/>
 
     <form onSubmit={handleSubmit}>
       <label>
         
-        <input type="text" name="name" onChange={handleChange} autocomplete="off" />
+        <input type="text" name="name" value={formValue} onChange={handleChange} autocomplete="off" />
       </label>
       <input type="submit" value="OK" />
     </form>
