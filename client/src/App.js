@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
+import Card from './Card' 
 
 
 var connectionOptions =  {
@@ -9,7 +10,8 @@ var connectionOptions =  {
             "transports" : ["websocket"]
         };
 
-const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions);
+const socket = io("http://localhost:5000", connectionOptions); //run this on localhost
+//const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //run this on HEROKU
 
 // var io = io_init('http://localhost:5000', {transports: ['websocket', 'polling', 'flashsocket']});
 
@@ -98,13 +100,14 @@ function App () {
 
 
 
-    
+    //<Card/> in return
 
   }
 
   return (
 
     <div className="App">
+
 
    <p style={{fontSize: '50px',   textAlign: 'center', fontFamily: "Century Gothic"}}> {sum == -1 ? "Loading" : sum} </p>
     <br/> <br/> 
@@ -119,7 +122,7 @@ function App () {
       <input style={{fontSize: '50px'}} type="submit" value="OK" />
     </form>
 
-
+    
 
     </div>
   );
@@ -127,3 +130,5 @@ function App () {
 };
 
 export default App;
+
+
