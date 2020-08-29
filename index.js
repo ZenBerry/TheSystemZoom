@@ -11,6 +11,50 @@ const client = new MongoClient(url);
 
 const app = express();
 
+
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+
+var initial = true
+var serverData = 0
+
+
+
+io.on("connection", function(socket) {
+
+  console.log("SOCKET CONNECTED")
+  if (initial === true) {
+
+    io.emit("new-remote-operations", 74);
+    initial = false
+
+  } else {
+    io.emit("new-remote-operations", serverData);
+  }
+
+  socket.on("new-operations", function(data) {
+
+    io.emit("new-remote-operations", data);
+    serverData = data
+    
+  });
+
+  socket.on("read", function() {
+
+    console.log("READ EMITTED")
+
+
+
+
+    // io.emit("readResponse", serverData);
+    io.emit("new-remote-operations", 1992);
+
+    
+  });
+
+  });
+
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -112,6 +156,8 @@ app.get('*', (req, res) => {
 
 
 const port = process.env.PORT || 5000;
-app.listen(port);
+// app.listen(port);
+
+http.listen(port)
 
 console.log(`Password generator listening on ${port}`);

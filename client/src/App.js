@@ -2,6 +2,9 @@ import React, { Component, useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
+import io from "socket.io-client";
+const socket = io("http://localhost:5000");
+
 function App() {
 
 
@@ -15,6 +18,9 @@ function App() {
   const [newData,setNewData] = useState(0)
 
   const [formValue, setFormValue] = useState("")
+  const [webSocketTest, setWebSocketTest] = useState(0)
+
+  socket.emit("read")
 
 
 
@@ -31,6 +37,15 @@ function App() {
   useEffect(() => {  //getting initial data once
   
       // console.log("ONCE")
+
+      socket.on('new-remote-operations', (data: number) => {
+            // we get settings data and can do something with it
+            console.log(data)
+            setWebSocketTest(data)
+
+          });
+
+
 
       axios.get('/api/passwords')
             .then(res => {
@@ -108,6 +123,8 @@ function App() {
 
 
     <br/> <br/>
+
+    {webSocketTest}
 
 
 
