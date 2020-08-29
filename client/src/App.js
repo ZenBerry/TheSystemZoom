@@ -1,12 +1,12 @@
-import React, { Component, useState, useEffect } from 'react';
-import './App.css';
-import axios from 'axios';
-
+import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
-const socket = io("http://localhost:5000");
+const socket = io("http://localhost:4000");
 
-function App() {
 
+
+export const SyncingEditor = () => {
+
+  const [sum, setSum] = useState(-1)
 
   const [response,setResponse] = useState('Loading...')
   const [passwords,setPasswords] = useState([])
@@ -18,129 +18,100 @@ function App() {
   const [newData,setNewData] = useState(0)
 
   const [formValue, setFormValue] = useState("")
-  const [webSocketTest, setWebSocketTest] = useState(0)
 
-  socket.emit("read")
-
+  useEffect(() => {
 
 
+    socket.emit("read")
 
+    socket.on('new-remote-operations', (data: number) => {
+          // we get settings data and can do something with it
+          console.log(data)
+          setSum(data)
 
-
-  // const getData = () => {
-  //   // Get the passwords and store them in state
-  //   fetch('/api/passwords')
-  //     .then(response => setResponse(response.data) );
-  // }
-
-
-  useEffect(() => {  //getting initial data once
-  
-      // console.log("ONCE")
-
-      socket.on('new-remote-operations', (data: number) => {
-            // we get settings data and can do something with it
-            console.log(data)
-            setWebSocketTest(data)
-
-          });
+        });
 
 
 
-      axios.get('/api/passwords')
-            .then(res => {
-              setValue(res.data)
-              setMyVar(res.data)
-              setResponse(res.data)
 
-            })
+  }, []);
+
+  function handleClick() {
+
    
-      }, [])
-
-  useEffect(() => { 
-      if (value != null){
-      axios.post('/api/passwords', { title: value, more: newData })
-     .then(response => setResponse(response.data) );
-
-      }
-   
-      }, [value])
 
 
 
-  
+  }
+
+  function handleSubmit(e : any) {
+    e.preventDefault();
 
 
-    function handleSubmit(e) {
-      e.preventDefault();
+    
+    if (Number.isNaN(newData) == true){
+      alert("wrong number!")
+
+    } else {
 
 
-      
-      if (Number.isNaN(newData) == true){
-        alert("wrong number!")
+     socket.emit("read")
+     socket.on('readResponse', (data: number) => {
 
-      } else {
-       setValue((prev) => (prev+newData) ) 
-       setMyVar((prev) => (prev+newData) )
-     }
-
-      setFormValue("") 
-      
+          
+           socket.emit("new-operations", data+newData)
+           
+           setSum(data)
+           socket.off('readResponse')
 
 
 
-    }
+         });
 
 
-    function handleChange(e) {
+     // setMyVar((prev) => (prev+newData) )
+   }
 
-      setNewData(Number(e.target.value)) 
-      setFormValue(e.target.value) 
+    setFormValue("") 
     
 
 
 
-      
-
-    }
+  }
 
 
+  function handleChange(e: any) {
 
-    return (
-      <div className="App"> <h1>
-
-      Cash {myVar} {myVar == response && "✅"} <br/> <br/>
+    setNewData(Number(e.target.value)) 
+    setFormValue(e.target.value) 
+  
 
 
 
-    <form onSubmit={handleSubmit}>
+    
+
+  }
+
+  return (
+
+    <div className="App">
+
+   <p style={{fontSize: '50px',   textAlign: 'center', fontFamily: "Century Gothic"}}> {sum == -1 ? "Loading" : sum} </p>
+    <br/> <br/> 
+    
+
+
+    <form onSubmit={handleSubmit}  style={{fontSize: '50px', textAlign: 'center'}}>
       <label>
         
-        <input style={{fontSize: '50px'}} type="text" name="name" value={formValue} onChange={handleChange} autocomplete="off" />
+        <input style={{fontSize: '50px'}} type="text" name="name" value={formValue} onChange={handleChange}  autoComplete="off" />
       </label>
       <input style={{fontSize: '50px'}} type="submit" value="OK" />
     </form>
 
 
-    <br/> <br/>
 
-    {webSocketTest}
+    </div>
+  );
 
-
-
-
-
-
-    </h1>
-
-
-       
-      </div>
-    );
-
-}
-
-export default App;
-
-
-
+};
