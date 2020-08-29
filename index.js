@@ -18,7 +18,7 @@ const io = require("socket.io")(http);
 
 
 var initial = true
-var serverData = 0
+var serverData = null
 
 
 
@@ -27,7 +27,30 @@ io.on("connection", function(socket) {
   console.log("SOCKET CONNECTED")
   if (initial === true) {
 
-    io.emit("new-remote-operations", 74);
+
+
+  	MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, function(err, db) { 
+  	  if (err) throw err;
+  	  var dbo = db.db("finance");
+  	  var myquery = { Name: "cashTest1" };
+  	  // var newvalues = { $set: {Note : req.body.title} };
+
+
+  	dbo.collection("finance").find(myquery).toArray(function(err, result) {
+  	  if (err) throw err;
+  	  // console.log(result[0].Value);
+
+  	  serverData = Number(result[0].Value)
+  	  io.emit("new-remote-operations", serverData);
+
+  	  // console.log(result[0].Name);
+  	  db.close();
+  	  
+  	});
+
+  	});
+
+    
     initial = false
 
   } else {
@@ -36,10 +59,38 @@ io.on("connection", function(socket) {
 
   socket.on("new-operations", function(data) {
 
-    io.emit("new-remote-operations", data);
+    io.emit("new-remote-operations", data); //sending new data back to client
     serverData = data
+
+
+    MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, function(err, db) {
+    	//sending new data back to the DB
+
+	      if (err) throw err;
+	      var dbo = db.db("finance");
+	      var myquery = { Name: "cashTest1" };
+
+	      var newvalues = { $set: {Value: serverData} };
+
+
+	     
+
+
+	      dbo.collection("finance").updateOne(myquery, newvalues, function(err, res) {
+	        if (err) throw err;
+	        console.log("1 document updated");
+
+	        db.close();
+	        
+	      });
+
+     
+
+    }); //MongoClient.connect END
+
+
     
-  });
+  }); //socket.on("new-operations" END
 
   socket.on("read", function() {
 

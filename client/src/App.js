@@ -9,7 +9,7 @@ var connectionOptions =  {
             "transports" : ["websocket"]
         };
 
-const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions);
+const socket = io("http://localhost:5000", connectionOptions);
 
 // var io = io_init('http://localhost:5000', {transports: ['websocket', 'polling', 'flashsocket']});
 
