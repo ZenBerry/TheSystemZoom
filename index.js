@@ -14,9 +14,12 @@ const app = express();
 
 const http = require("http").Server(app);
 
-sio = require('socket.io');     
+io = require('socket.io')(http);     
 
-var io = sio.listen(http, { origins: '*:*' });
+io.origins(['http://finance-test-websockets.herokuapp.com/']);
+
+
+// var io = sio.listen(http, { origins: '*:*' });
 
 
 
