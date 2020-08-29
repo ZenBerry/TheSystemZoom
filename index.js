@@ -46,8 +46,8 @@ io.on("connection", function(socket) {
 
 
 
-    // io.emit("readResponse", serverData);
-    io.emit("new-remote-operations", 1992);
+    io.emit("readResponse", serverData);
+    io.emit("new-remote-operations", serverData);
 
     
   });

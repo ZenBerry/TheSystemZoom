@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
-const socket = io("http://localhost:4000");
+const socket = io("http://localhost:5000");
 
 
 
-export const SyncingEditor = () => {
+function App () {
 
   const [sum, setSum] = useState(-1)
 
@@ -115,3 +115,5 @@ export const SyncingEditor = () => {
   );
 
 };
+
+export default App;
