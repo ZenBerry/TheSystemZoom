@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
-const socket = io('http://localhost:5000', {transports: ['websocket']});
+const socket = io("http://localhost:5000");
 
-
+// var io = io_init('http://localhost:5000', {transports: ['websocket', 'polling', 'flashsocket']});
 
 
 function App () {

@@ -11,9 +11,19 @@ const client = new MongoClient(url);
 
 const app = express();
 
+var http = require('http').Server(app);
+var io = require('socket.io')(http, {origins:'finance-test-websockets.herokuapp.com:* http://finance-test-websockets.herokuapp.com* http://www.finance-test-websockets.herokuapp.com:* https://www.finance-test-websockets.herokuapp.com:* https://finance-test-websockets.herokuapp.com:* '});
+var compress = require('compression');
+var redis = require('socket.io-redis');
+var uuid = require('node-uuid');
+var geoip = require('geoip-lite');
+var _ = require('underscore')._;
 
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
+io.adapter(redis({ host: 'localhost', port: 5000}));
+
+
+// const http = require("http").Server(app);
+// const io = require("socket.io")(http);
 
 
 
