@@ -34,8 +34,11 @@ function App () {
   //Drag vars 
 
   const [controlledPosition, SetControlledPosition] = useState({x: 400, y: 400})
-  const [receivedPosition, SetReceivedPosition] = useState({x: 100, y: 100})
+  const [receivedPosition, SetReceivedPosition] = useState({x: 500, y: 500}) 
   const [dragging, setDragging] = useState(false)
+  const [justStoppedDragging, setJustStoppedDragging] = useState(false)
+  const [mySocket, setMySocket] = useState("")
+  const [dragSocket, setDragSocket] = useState("")
 
 
 
@@ -46,7 +49,11 @@ function App () {
 
     if (dragging === false) {
 
-     SetControlledPosition(receivedPosition)
+      if (dragSocket != mySocket) {
+
+       SetControlledPosition(receivedPosition)
+
+     }
       
     }
 
@@ -56,6 +63,15 @@ function App () {
   }, [receivedPosition]);
 
   useEffect(() => {
+
+    socket.on('socketInfo', (data) => {
+          // we get settings data and can do something with it
+          console.log("SOCKET INFO ",data)
+          // setSum(data)
+
+          setMySocket(data)
+
+        });
 
 
     socket.emit("read")
@@ -67,15 +83,21 @@ function App () {
 
         });
 
-    socket.on('remoteDrag', ({x,y}) => {
+
+
+    socket.on('remoteDrag', ({x,y}, receivedDragSocketID) => {
 
          
-      console.log("REMOTE DRAG")
+      console.log("REMOTE DRAG. SOCKET = ", receivedDragSocketID)
 
+     
+        SetReceivedPosition({x,y})
+
+        setDragSocket(receivedDragSocketID)
 
 
       
-        SetReceivedPosition({x,y})
+        
 
 
 
@@ -148,6 +170,7 @@ function App () {
 
   function onControlledDrag (e, position) { //handles controlled drag
     setDragging(true)
+    setJustStoppedDragging(false)
 
     let {x, y} = position;
     socket.emit("drag", {x,y})
@@ -175,6 +198,7 @@ function App () {
   
 
     setDragging(true)
+    setJustStoppedDragging(false)
 
     console.log(dragging)
     
@@ -186,6 +210,7 @@ function App () {
     // SetControlledPosition(receivedPosition)
 
     setDragging(false)
+    setJustStoppedDragging(true)
 
     console.log("stopped")
     
@@ -200,19 +225,19 @@ function App () {
 
         <div>
 
-         <p> New drag </p>
+         <p> CHAK </p>
 
-         {controlledPosition.x}
+       
 
          </div>
 
           </Draggable>
 
-
+          <Draggable>
 
    <p style={{fontSize: '50px',   textAlign: 'center', fontFamily: "Century Gothic"}}> {sum == -1 ? "Loading" : sum} </p>
 
-
+   </Draggable>
 
     <br/> <br/> 
     

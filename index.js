@@ -24,7 +24,13 @@ var serverData = null
 
 io.on("connection", function(socket) {
 
-  console.log("SOCKET CONNECTED")
+	var socketID = socket.id	
+
+  console.log("SOCKET CONNECTED. ID = ", socket.id)
+  
+  io.to(socket.id).emit("socketInfo", socket.id) //emitting socket id to different clients
+
+
   if (initial === true) {
 
 
@@ -60,7 +66,7 @@ io.on("connection", function(socket) {
   socket.on("drag", function(data) { 
 
   	console.log(data)
-  	io.emit("remoteDrag", data);
+  	io.emit("remoteDrag", data, socketID);
 
   })
 
