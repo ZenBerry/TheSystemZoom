@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
+import Draggable from 'react-draggable'
 
 
 var connectionOptions =  {
@@ -9,7 +10,8 @@ var connectionOptions =  {
             "transports" : ["websocket"]
         };
 
-const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions);
+// const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
+const socket = io("http://localhost:5000", connectionOptions); //for running locally
 
 // var io = io_init('http://localhost:5000', {transports: ['websocket', 'polling', 'flashsocket']});
 
@@ -29,6 +31,30 @@ function App () {
 
   const [formValue, setFormValue] = useState("")
 
+  //Drag vars 
+
+  const [controlledPosition, SetControlledPosition] = useState({x: 400, y: 400})
+  const [receivedPosition, SetReceivedPosition] = useState({x: 100, y: 100})
+  const [dragging, setDragging] = useState(false)
+
+
+
+  useEffect(() => {
+
+
+    console.log("DRAGGING FROM USEFFECT", dragging)
+
+    if (dragging === false) {
+
+     SetControlledPosition(receivedPosition)
+      
+    }
+
+
+
+
+  }, [receivedPosition]);
+
   useEffect(() => {
 
 
@@ -40,6 +66,24 @@ function App () {
           setSum(data)
 
         });
+
+    socket.on('remoteDrag', ({x,y}) => {
+
+         
+      console.log("REMOTE DRAG")
+
+
+
+      
+        SetReceivedPosition({x,y})
+
+
+
+
+
+        });
+
+
 
 
 
@@ -102,11 +146,74 @@ function App () {
 
   }
 
+  function onControlledDrag (e, position) { //handles controlled drag
+    setDragging(true)
+
+    let {x, y} = position;
+    socket.emit("drag", {x,y})
+
+    socket.on('remoteDrag', ({x,y}) => {
+
+         
+      // console.log(data)
+
+      
+        SetReceivedPosition({x,y})
+
+
+
+        });
+
+    SetControlledPosition({x,y})
+
+    // console.log(position.x)
+    
+  };
+
+  function handleDragStart () { //handles controlled drag stop
+
+  
+
+    setDragging(true)
+
+    console.log(dragging)
+    
+  };
+
+
+  function handleDragStop () { //handles controlled drag stop
+
+    // SetControlledPosition(receivedPosition)
+
+    setDragging(false)
+
+    console.log("stopped")
+    
+  };
+
   return (
+
 
     <div className="App">
 
+    <Draggable position={controlledPosition} onDrag={onControlledDrag} onStop = {handleDragStop} onStart = {handleDragStart} >
+
+        <div>
+
+         <p> New drag </p>
+
+         {controlledPosition.x}
+
+         </div>
+
+          </Draggable>
+
+
+
    <p style={{fontSize: '50px',   textAlign: 'center', fontFamily: "Century Gothic"}}> {sum == -1 ? "Loading" : sum} </p>
+
+
+
     <br/> <br/> 
     
 

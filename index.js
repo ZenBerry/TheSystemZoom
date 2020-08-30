@@ -57,6 +57,13 @@ io.on("connection", function(socket) {
     io.emit("new-remote-operations", serverData);
   }
 
+  socket.on("drag", function(data) { 
+
+  	console.log(data)
+  	io.emit("remoteDrag", data);
+
+  })
+
   socket.on("new-operations", function(data) {
 
     io.emit("new-remote-operations", data); //sending new data back to client
