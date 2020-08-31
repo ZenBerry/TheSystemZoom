@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
 import Draggable from 'react-draggable'
+import Moveable from './components/Moveable' 
 
 
 var connectionOptions =  {
@@ -42,31 +43,18 @@ function App () {
 
 
 
-  useEffect(() => {
-
-
-    console.log("DRAGGING FROM USEFFECT", dragging)
-
-    if (dragging === false) {
-
-      if (dragSocket != mySocket) {
-
-       SetControlledPosition(receivedPosition)
-
-     }
-      
-    }
-
-
-
-
-  }, [receivedPosition]);
 
   useEffect(() => {
+
+    socket.on('remoteAddMoveables', (moveables) => {
+
+       setMoveables(moveables) 
+
+    });
 
     socket.on('socketInfo', (data) => {
           // we get settings data and can do something with it
-          console.log("SOCKET INFO ",data)
+          // console.log("SOCKET INFO ",data)
           // setSum(data)
 
           setMySocket(data)
@@ -78,32 +66,14 @@ function App () {
 
     socket.on('new-remote-operations', (data: number) => {
           // we get settings data and can do something with it
-          console.log(data)
+          // console.log(data)
           setSum(data)
 
         });
 
 
 
-    socket.on('remoteDrag', ({x,y}, receivedDragSocketID) => {
-
-         
-      console.log("REMOTE DRAG. SOCKET = ", receivedDragSocketID)
-
-     
-        SetReceivedPosition({x,y})
-
-        setDragSocket(receivedDragSocketID)
-
-
-      
-        
-
-
-
-
-
-        });
+ 
 
 
 
@@ -168,76 +138,40 @@ function App () {
 
   }
 
-  function onControlledDrag (e, position) { //handles controlled drag
-    setDragging(true)
-    setJustStoppedDragging(false)
-
-    let {x, y} = position;
-    socket.emit("drag", {x,y})
-
-    socket.on('remoteDrag', ({x,y}) => {
-
-         
-      // console.log(data)
-
-      
-        SetReceivedPosition({x,y})
+  function handleMoveableAddition () {
+    setMoveables(prev => prev+1)
+    socket.emit("addMoveables", moveables+1) //WE HAVE TO MAKE IT BETTER
+  }
 
 
+  // console.log("MY SOCKET FROM APP",mySocket)
 
-        });
-
-    SetControlledPosition({x,y})
-
-    // console.log(position.x)
-    
-  };
-
-  function handleDragStart () { //handles controlled drag stop
-
-  
-
-    setDragging(true)
-    setJustStoppedDragging(false)
-
-    console.log(dragging)
-    
-  };
-
-
-  function handleDragStop () { //handles controlled drag stop
-
-    // SetControlledPosition(receivedPosition)
-
-    setDragging(false)
-    setJustStoppedDragging(true)
-
-    console.log("stopped")
-    
-  };
+  const [moveables, setMoveables] = useState(1)
 
   return (
 
 
     <div className="App">
 
-    <Draggable position={controlledPosition} onDrag={onControlledDrag} onStop = {handleDragStop} onStart = {handleDragStart} >
+  
 
-        <div>
+          
 
-         <p> CHAK </p>
 
+
+
+
+
+         
        
 
-         </div>
 
-          </Draggable>
 
-          <Draggable>
 
+          
    <p style={{fontSize: '50px',   textAlign: 'center', fontFamily: "Century Gothic"}}> {sum == -1 ? "Loading" : sum} </p>
 
-   </Draggable>
+   
 
     <br/> <br/> 
     
@@ -250,6 +184,11 @@ function App () {
       </label>
       <input style={{fontSize: '50px'}} type="submit" value="OK" />
     </form>
+
+
+    <button onClick = { handleMoveableAddition}> + </button>   
+
+    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i}>  </Moveable> </div>) }
 
 
 

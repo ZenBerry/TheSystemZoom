@@ -63,10 +63,10 @@ io.on("connection", function(socket) {
     io.emit("new-remote-operations", serverData);
   }
 
-  socket.on("drag", function(data) { 
+  socket.on("drag", function(data, moveableId) { 
 
   	console.log(data)
-  	io.emit("remoteDrag", data, socketID);
+  	io.emit("remoteDrag", data, socketID, moveableId);
 
   })
 
@@ -104,6 +104,14 @@ io.on("connection", function(socket) {
 
     
   }); //socket.on("new-operations" END
+
+  socket.on("addMoveables", function(moveables) { //adding new moveables
+
+  	io.emit("remoteAddMoveables", moveables);
+
+  	console.log("MOVEABLES", moveables)
+
+  })
 
   socket.on("read", function() {
 
