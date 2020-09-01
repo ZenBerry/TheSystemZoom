@@ -8,8 +8,8 @@ function Moveable(props) {
 
 	// console.log("mySocket FROM COMP", props.mySocket)
 
-    const [controlledPosition, SetControlledPosition] = useState({ x: 1, y: 1 })
-    const [receivedPosition, SetReceivedPosition] = useState({ x: 1, y: 1 })
+    const [controlledPosition, SetControlledPosition] = useState({ x: props.x, y: props.y })
+    const [receivedPosition, SetReceivedPosition] = useState({ x: props.x, y: props.y })
     const [dragging, setDragging] = useState(false)
     const [justStoppedDragging, setJustStoppedDragging] = useState(false)
     const [dragSocket, setDragSocket] = useState("")
@@ -29,6 +29,8 @@ function Moveable(props) {
 
             
                 SetControlledPosition(receivedPosition)
+
+                console.log("receivedPosition!", receivedPosition)
 
             	
 

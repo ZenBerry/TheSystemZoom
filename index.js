@@ -105,11 +105,11 @@ io.on("connection", function(socket) {
     
   }); //socket.on("new-operations" END
 
-  socket.on("addMoveables", function(moveables) { //adding new moveables
+  socket.on("addMoveables", function(moveables, moveableInitX, moveableInitY) { //adding new moveables
 
-  	io.emit("remoteAddMoveables", moveables);
+  	io.emit("remoteAddMoveables", moveables, moveableInitX, moveableInitY);
 
-  	console.log("MOVEABLES", moveables)
+  	console.log("MOVEABLES", moveables, moveableInitX, moveableInitY)
 
   })
 

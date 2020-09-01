@@ -11,8 +11,8 @@ var connectionOptions =  {
             "transports" : ["websocket"]
         };
 
-const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
-// const socket = io("http://localhost:5000", connectionOptions); //for running locally
+// const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
+const socket = io("http://localhost:5000", connectionOptions); //for running locally
 
 // var io = io_init('http://localhost:5000', {transports: ['websocket', 'polling', 'flashsocket']});
 
@@ -41,14 +41,21 @@ function App () {
   const [mySocket, setMySocket] = useState("")
   const [dragSocket, setDragSocket] = useState("")
 
+  const [moveableInitX, setMoveableInitX] = useState(0)
+  const [moveableInitY, setMoveableInitY] = useState(0)
+
+
 
 
 
   useEffect(() => {
 
-    socket.on('remoteAddMoveables', (moveables) => {
+    socket.on('remoteAddMoveables', (moveables, moveableInitX, moveableInitY) => {
 
+      setMoveableInitX(moveableInitX)
+      setMoveableInitY(moveableInitY)
        setMoveables(moveables) 
+
 
     });
 
@@ -138,20 +145,43 @@ function App () {
 
   }
 
-  function handleMoveableAddition () {
+  function handleMoveableAddition (e) {
+
+
+    console.log("E!", e)
+   
+    setMoveableInitX(e.clientX)
+    setMoveableInitY(e.clientY-33)
+
+
     setMoveables(prev => prev+1)
-    socket.emit("addMoveables", moveables+1) //WE HAVE TO MAKE IT BETTER
+    socket.emit("addMoveables", moveables+1, e.clientX, e.clientY-33) //WE HAVE TO MAKE IT BETTER
+     
+
+     // if(document.selection && document.selection.empty) { //DOUBLE CLICK SELECTION PREVENTION 0
+     //     document.selection.empty();
+     // } else if(window.getSelection) {
+     //     var sel = window.getSelection();
+     //     sel.removeAllRanges();
+     // } 
   }
 
 
   // console.log("MY SOCKET FROM APP",mySocket)
 
-  const [moveables, setMoveables] = useState(1)
+  const [moveables, setMoveables] = useState(0)
+
+
+
+  document.ondblclick = (e) => handleMoveableAddition(e);
+
 
   return (
 
 
-    <div className="App">
+    <div className="App" style={{userSelect: 'none'}}>
+     {/*<div onDoubleClick = { () => alert("doubleclick") } className="App">*/}
+
 
   
 
@@ -162,7 +192,7 @@ function App () {
 
 
 
-         
+{/*         
        
 
 
@@ -183,12 +213,14 @@ function App () {
         <input style={{fontSize: '50px'}} type="text" name="name" value={formValue} onChange={handleChange}  autoComplete="off" />
       </label>
       <input style={{fontSize: '50px'}} type="submit" value="OK" />
-    </form>
+    </form>*/}
 
 
-    <button onClick = { handleMoveableAddition}> + </button>   
 
-    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i}>  </Moveable> </div>) }
+    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i} x={moveableInitX} y={moveableInitY}>  </Moveable> </div>) }
+
+    <br/> <br/> <br/> <br/> <br/>
+    {/*<button onClick = {handleMoveableAddition}> + </button>   */}
 
 
 
