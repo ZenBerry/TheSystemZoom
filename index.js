@@ -19,14 +19,15 @@ const io = require("socket.io")(http);
 
 var initial = true
 var serverData = null
-
+var howManyMoveables = 0
 
 
 io.on("connection", function(socket) {
 
 	var socketID = socket.id	
+  
 
-  console.log("SOCKET CONNECTED. ID = ", socket.id)
+  // console.log("SOCKET CONNECTED. ID = ", socket.id)
   
   io.to(socket.id).emit("socketInfo", socket.id) //emitting socket id to different clients
 
@@ -65,7 +66,9 @@ io.on("connection", function(socket) {
 
   socket.on("drag", function(data, moveableId) { 
 
-  	console.log(data)
+
+
+  	// console.log(data)
   	io.emit("remoteDrag", data, socketID, moveableId);
 
   })
@@ -91,7 +94,7 @@ io.on("connection", function(socket) {
 
 	      dbo.collection("finance").updateOne(myquery, newvalues, function(err, res) {
 	        if (err) throw err;
-	        console.log("1 document updated");
+	        // console.log("1 document updated");
 
 	        db.close();
 	        
@@ -107,21 +110,33 @@ io.on("connection", function(socket) {
 
   socket.on("addMoveables", function(moveables, moveableInitX, moveableInitY) { //adding new moveables
 
+    howManyMoveables=moveables
+
+    //PAUSED HERE. It should add XY and moveableId to an array for then to emit this array on READ
+
+
+
+    console.log("ADD MOVEABLES EMITTED")
+    console.log("HOW MANY MOV. FROM ADD MOV.",howManyMoveables)
+
   	io.emit("remoteAddMoveables", moveables, moveableInitX, moveableInitY);
 
-  	console.log("MOVEABLES", moveables, moveableInitX, moveableInitY)
+
+
+  	// console.log("MOVEABLES", moveables, moveableInitX, moveableInitY)
 
   })
 
   socket.on("read", function() {
 
-    console.log("READ EMITTED")
+    // console.log("READ EMITTED")
+
+    console.log("HOW MANY MOV. FROM READ",howManyMoveables)
 
 
 
-
-    io.emit("readResponse", serverData);
-    io.emit("new-remote-operations", serverData);
+    io.emit("readResponse", serverData, howManyMoveables);
+    io.emit("new-remote-operations", serverData, howManyMoveables);
 
     
   });
@@ -146,88 +161,10 @@ app.use(function(req, res, next) {
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
-app.get('/api/passwords', (req, res) => {
-  const count = 5;
-
-  // Generate some passwords
-  const passwords = Array.from(Array(count).keys()).map(i =>
-    generatePassword(12, false)
-  )
-
-  MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, function(err, db) { 
-    if (err) throw err;
-    var dbo = db.db("test");
-    var myquery = { Name: "Hey Hey, writing from React!" };
-    var newvalues = { $set: {Note : req.body.title} };
-
-  dbo.collection("people").find(myquery).toArray(function(err, result) {
-    if (err) throw err;
-    console.log(result[0].Note);
-    res.json(result[0].Note); // Return them json
-    // console.log(result[0].Name);
-    db.close();
-    
-  });
-
-  });
-
-
-
-  // console.log(`Sent ${count} passwords`);
-});
-
-
-app.post('/api/passwords', (req, res) => { //GETTING DATA FROM REACT
-
-
-
-MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, function(err, db) {
-  if (err) throw err;
-  var dbo = db.db("test");
-  var myquery = { Name: "Hey Hey, writing from React!" };
-  var movement = req.body.more
-  var newvalues = { $set: {Note : req.body.title, more: req.body.more} };
-
-
- 
-
-
-  dbo.collection("people").updateOne(myquery, newvalues, function(err, res) {
-    if (err) throw err;
-    console.log("1 document updated");
-
-    
-    
-  });
-
-  dbo.collection("people").insertOne({Movement: movement}); //create a new record each time to store movement
 
 
 
 
-
-
-
-
-  dbo.collection("people").find(myquery).toArray(function(err, result) {
-    if (err) throw err;
-
-    res.json(result[0].Note); // Return them json
-    // console.log(result[0].Name);
-    db.close();
-    
-  });
-
-
-
-});
-
-
-
-
-
-
-});
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

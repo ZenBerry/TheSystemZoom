@@ -34,15 +34,14 @@ function App () {
 
   //Drag vars 
 
-  const [controlledPosition, SetControlledPosition] = useState({x: 400, y: 400})
-  const [receivedPosition, SetReceivedPosition] = useState({x: 500, y: 500}) 
-  const [dragging, setDragging] = useState(false)
-  const [justStoppedDragging, setJustStoppedDragging] = useState(false)
+ 
   const [mySocket, setMySocket] = useState("")
   const [dragSocket, setDragSocket] = useState("")
 
   const [moveableInitX, setMoveableInitX] = useState(0)
   const [moveableInitY, setMoveableInitY] = useState(0)
+
+  const [moveables, setMoveables] = useState(0)
 
 
 
@@ -71,11 +70,14 @@ function App () {
 
     socket.emit("read")
 
-    socket.on('new-remote-operations', (data: number) => {
+    socket.on('new-remote-operations', (data: number, howManyMoveables) => {
           // we get settings data and can do something with it
-          // console.log(data)
-          setSum(data)
+           
 
+          
+          setSum(data)
+          setMoveables(howManyMoveables) 
+          console.log("howManyMoveables", howManyMoveables)
         });
 
 
@@ -115,6 +117,7 @@ function App () {
            socket.emit("new-operations", data+newData)
            
            setSum(data)
+
            socket.off('readResponse')
 
 
@@ -169,28 +172,22 @@ function App () {
 
   // console.log("MY SOCKET FROM APP",mySocket)
 
-  const [moveables, setMoveables] = useState(0)
+  
 
-
+  const [positions, setPositions] = useState(
+    [{id:0, x:0, y:0}, {id:1, x:20, y:20}, {id:0, x:40, y:40}]
+    )
 
   document.ondblclick = (e) => handleMoveableAddition(e);
+
+
 
 
   return (
 
 
     <div className="App" style={{userSelect: 'none'}}>
-     {/*<div onDoubleClick = { () => alert("doubleclick") } className="App">*/}
-
-
-  
-
-          
-
-
-
-
-
+    
 
 {/*         
        
@@ -217,7 +214,11 @@ function App () {
 
 
 
-    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i} x={moveableInitX} y={moveableInitY}>  </Moveable> </div>) }
+   {/* { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i} x={positions[i].x} y={positions[i].y}>  </Moveable> </div>) }*/}
+
+    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </div>) }
+
+   
 
     <br/> <br/> <br/> <br/> <br/>
     {/*<button onClick = {handleMoveableAddition}> + </button>   */}
