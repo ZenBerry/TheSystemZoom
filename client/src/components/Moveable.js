@@ -46,6 +46,22 @@ function Moveable(props) {
 
     useEffect(() => {
 
+      socket.on('TEST', (positions) => {
+
+        console.log("NEW LOG! POSITIONS FROM MOVEABLE", Object.values(positions)[props.id]) //Object.keys(positions)[props.id]
+
+
+       let { x, y } = Object.values(positions)[props.id]
+
+        SetReceivedPosition({ x, y })
+
+        
+
+
+  
+
+      });
+
 
 
 
@@ -136,7 +152,7 @@ function Moveable(props) {
 
     	    <div>
 
-    	     <p> Dolya </p>
+    	     <p> Dolya {props.id} </p>
 
     	   
 

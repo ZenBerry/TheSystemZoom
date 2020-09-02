@@ -21,10 +21,15 @@ var initial = true
 var serverData = null
 var howManyMoveables = 0
 
+var positions =  [{id:0, x:0, y:0}, {id:1, x:20, y:20}, {id:0, x:40, y:40} ]
+  
+
 
 io.on("connection", function(socket) {
 
 	var socketID = socket.id	
+
+
   
 
   // console.log("SOCKET CONNECTED. ID = ", socket.id)
@@ -32,7 +37,7 @@ io.on("connection", function(socket) {
   io.to(socket.id).emit("socketInfo", socket.id) //emitting socket id to different clients
 
 
-  if (initial === true) {
+  if (initial === true) { //finance stuff 
 
 
 
@@ -48,7 +53,7 @@ io.on("connection", function(socket) {
   	  // console.log(result[0].Value);
 
   	  serverData = Number(result[0].Value)
-  	  io.emit("new-remote-operations", serverData);
+  	  io.emit("new-remote-operations", serverData, positions);
 
   	  // console.log(result[0].Name);
   	  db.close();
@@ -61,7 +66,7 @@ io.on("connection", function(socket) {
     initial = false
 
   } else {
-    io.emit("new-remote-operations", serverData);
+    io.emit("new-remote-operations", serverData, positions);
   }
 
   socket.on("drag", function(data, moveableId) { 
@@ -135,8 +140,9 @@ io.on("connection", function(socket) {
 
 
 
-    io.emit("readResponse", serverData, howManyMoveables);
-    io.emit("new-remote-operations", serverData, howManyMoveables);
+    io.emit("readResponse", serverData, howManyMoveables, positions);
+    io.emit("new-remote-operations", serverData, howManyMoveables, positions);
+    io.emit("TEST", positions);
 
     
   });

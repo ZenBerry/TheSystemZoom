@@ -43,6 +43,10 @@ function App () {
 
   const [moveables, setMoveables] = useState(0)
 
+  const [positions, setPositions] = useState([])
+
+ const [positions2, setPositions2] = useState([{id:0, x:0, y:0}, {id:1, x:20, y:20}, {id:0, x:40, y:40}]) 
+
 
 
 
@@ -70,14 +74,22 @@ function App () {
 
     socket.emit("read")
 
-    socket.on('new-remote-operations', (data: number, howManyMoveables) => {
-          // we get settings data and can do something with it
-           
+    socket.on('readResponse', (howManyMoveables, positions) => {
 
           
-          setSum(data)
+        //for some strange reason it doesn't work as intended. Inspect!
+
+        });
+
+    
+
+    socket.on('new-remote-operations', (data: number, howManyMoveables, positions) => {
+
+          setPositions(positions)  
           setMoveables(howManyMoveables) 
-          console.log("howManyMoveables", howManyMoveables)
+          console.log("howManyMoveables", howManyMoveables)  
+          setSum(data)
+
         });
 
 
@@ -174,9 +186,7 @@ function App () {
 
   
 
-  const [positions, setPositions] = useState(
-    [{id:0, x:0, y:0}, {id:1, x:20, y:20}, {id:0, x:40, y:40}]
-    )
+
 
   document.ondblclick = (e) => handleMoveableAddition(e);
 
@@ -216,7 +226,7 @@ function App () {
 
    {/* { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i} x={positions[i].x} y={positions[i].y}>  </Moveable> </div>) }*/}
 
-    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </div>) }
+    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </div>) }
 
    
 
