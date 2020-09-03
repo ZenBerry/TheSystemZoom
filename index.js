@@ -21,7 +21,7 @@ var initial = true
 var serverData = null
 var howManyMoveables = 0
 
-var positions =  [{id:0, x:0, y:0}, {id:1, x:20, y:20}, {id:0, x:40, y:40} ]
+var positions =  [{id:0, x:50, y:50}, {id:1, x:100, y:100}, {id:2, x:200, y:200}, {id:3, x:300, y:300}, {id:4, x:400, y:400}, {id:5, x:500, y:500} ]
   
 
 
@@ -32,7 +32,7 @@ io.on("connection", function(socket) {
 
   
 
-  // console.log("SOCKET CONNECTED. ID = ", socket.id)
+  // // COMMENTED OUT AT 3 AUG console.log("SOCKET CONNECTED. ID = ", socket.id)
   
   io.to(socket.id).emit("socketInfo", socket.id) //emitting socket id to different clients
 
@@ -50,12 +50,12 @@ io.on("connection", function(socket) {
 
   	dbo.collection("finance").find(myquery).toArray(function(err, result) {
   	  if (err) throw err;
-  	  // console.log(result[0].Value);
+  	  // // COMMENTED OUT AT 3 AUG console.log(result[0].Value);
 
   	  serverData = Number(result[0].Value)
   	  io.emit("new-remote-operations", serverData, positions);
 
-  	  // console.log(result[0].Name);
+  	  // // COMMENTED OUT AT 3 AUG console.log(result[0].Name);
   	  db.close();
   	  
   	});
@@ -71,9 +71,12 @@ io.on("connection", function(socket) {
 
   socket.on("drag", function(data, moveableId) { 
 
+    positions[moveableId].x = data.x
+    positions[moveableId].y = data.y
 
 
-  	// console.log(data)
+
+  	// // COMMENTED OUT AT 3 AUG console.log(data)
   	io.emit("remoteDrag", data, socketID, moveableId);
 
   })
@@ -99,7 +102,7 @@ io.on("connection", function(socket) {
 
 	      dbo.collection("finance").updateOne(myquery, newvalues, function(err, res) {
 	        if (err) throw err;
-	        // console.log("1 document updated");
+	        // // COMMENTED OUT AT 3 AUG console.log("1 document updated");
 
 	        db.close();
 	        
@@ -117,26 +120,34 @@ io.on("connection", function(socket) {
 
     howManyMoveables=moveables
 
-    //PAUSED HERE. It should add XY and moveableId to an array for then to emit this array on READ
+    console.log(moveables)
+
+    positions[moveables-1].x = moveableInitX //saving just-added moveable position to the server
+    positions[moveables-1].y = moveableInitY
+
+    // positions.push({id:moveables-1, x:moveableInitX, y:moveableInitY}) PAUSED HERE 3 AUG! SEE YA!
 
 
 
-    console.log("ADD MOVEABLES EMITTED")
-    console.log("HOW MANY MOV. FROM ADD MOV.",howManyMoveables)
+
+
+
+    // COMMENTED OUT AT 3 AUG console.log("ADD MOVEABLES EMITTED")
+    // COMMENTED OUT AT 3 AUG console.log("HOW MANY MOV. FROM ADD MOV.",howManyMoveables)
 
   	io.emit("remoteAddMoveables", moveables, moveableInitX, moveableInitY);
 
 
 
-  	// console.log("MOVEABLES", moveables, moveableInitX, moveableInitY)
+  	// // COMMENTED OUT AT 3 AUG console.log("MOVEABLES", moveables, moveableInitX, moveableInitY)
 
   })
 
   socket.on("read", function() {
 
-    // console.log("READ EMITTED")
+    // // COMMENTED OUT AT 3 AUG console.log("READ EMITTED")
 
-    console.log("HOW MANY MOV. FROM READ",howManyMoveables)
+    // COMMENTED OUT AT 3 AUG console.log("HOW MANY MOV. FROM READ",howManyMoveables)
 
 
 
@@ -185,4 +196,4 @@ const port = process.env.PORT || 5000;
 
 http.listen(port)
 
-console.log(`Password generator listening on ${port}`);
+// COMMENTED OUT AT 3 AUG console.log(`Password generator listening on ${port}`);

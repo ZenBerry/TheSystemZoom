@@ -53,7 +53,9 @@ function Moveable(props) {
 
        let { x, y } = Object.values(positions)[props.id]
 
+        SetControlledPosition({ x, y })
         SetReceivedPosition({ x, y })
+
 
         
 
