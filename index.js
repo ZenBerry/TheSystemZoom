@@ -21,7 +21,8 @@ var initial = true
 var serverData = null
 var howManyMoveables = 0
 
-var positions =  [{id:0, x:50, y:50}, {id:1, x:100, y:100}, {id:2, x:200, y:200}, {id:3, x:300, y:300}, {id:4, x:400, y:400}, {id:5, x:500, y:500} ]
+var positions =  []
+// var positions =  [{id:0, x:50, y:50}, {id:1, x:100, y:100}, {id:2, x:200, y:200}, {id:3, x:300, y:300}, {id:4, x:400, y:400}, {id:5, x:500, y:500} ]
   
 
 
@@ -122,10 +123,10 @@ io.on("connection", function(socket) {
 
     console.log(moveables)
 
-    positions[moveables-1].x = moveableInitX //saving just-added moveable position to the server
-    positions[moveables-1].y = moveableInitY
+    // positions[moveables-1].x = moveableInitX //saving just-added moveable position to the server
+    // positions[moveables-1].y = moveableInitY
 
-    // positions.push({id:moveables-1, x:moveableInitX, y:moveableInitY}) PAUSED HERE 3 AUG! SEE YA!
+    positions.push({id:moveables-1, x:moveableInitX, y:moveableInitY}) //PAUSED HERE 3 AUG! SEE YA!
 
 
 

@@ -8,11 +8,12 @@ function Moveable(props) {
 
 	// console.log("mySocket FROM COMP", props.mySocket)
 
-    const [controlledPosition, SetControlledPosition] = useState({ x: props.x, y: props.y })
-    const [receivedPosition, SetReceivedPosition] = useState({ x: props.x, y: props.y })
+    const [controlledPosition, setControlledPosition] = useState({ x: props.x, y: props.y })
+    const [receivedPosition, setReceivedPosition] = useState({ x: props.x, y: props.y })
     const [dragging, setDragging] = useState(false)
     const [justStoppedDragging, setJustStoppedDragging] = useState(false)
     const [dragSocket, setDragSocket] = useState("")
+    const [loaded, setLoaded] = useState(false)
 
     const socket = props.socket
 
@@ -28,7 +29,7 @@ function Moveable(props) {
             if (dragSocket != props.mySocket) {
 
             
-                SetControlledPosition(receivedPosition)
+                setControlledPosition(receivedPosition)
 
                 console.log("receivedPosition!", receivedPosition)
 
@@ -48,13 +49,22 @@ function Moveable(props) {
 
       socket.on('TEST', (positions) => {
 
+        console.log('POSITIONS', positions)
+
+        if (positions.length > 0) {
+
         console.log("NEW LOG! POSITIONS FROM MOVEABLE", Object.values(positions)[props.id]) //Object.keys(positions)[props.id]
 
 
        let { x, y } = Object.values(positions)[props.id]
 
-        SetControlledPosition({ x, y })
-        SetReceivedPosition({ x, y })
+        setControlledPosition({ x, y })
+        setReceivedPosition({ x, y })
+
+        setLoaded(true)
+
+        }
+
 
 
         
@@ -82,7 +92,7 @@ function Moveable(props) {
 
             	if (receivedMoveableId == props.id) {
 
-                SetReceivedPosition({ x, y })
+                setReceivedPosition({ x, y })
             	}
 
 
@@ -98,7 +108,7 @@ function Moveable(props) {
       setJustStoppedDragging(false)
       
       let {x, y} = position;
-      SetControlledPosition({x,y})
+      setControlledPosition({x,y})
 
       
 

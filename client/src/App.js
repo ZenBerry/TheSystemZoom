@@ -41,7 +41,7 @@ function App () {
   const [moveableInitX, setMoveableInitX] = useState(0)
   const [moveableInitY, setMoveableInitY] = useState(0)
 
-  const [moveables, setMoveables] = useState(0)
+  const [moveables, setMoveables] = useState(-1)
 
   const [positions, setPositions] = useState([])
 
@@ -226,7 +226,7 @@ function App () {
 
    {/* { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}> <Moveable  socket={socket} mySocket={mySocket} id = {i} x={positions[i].x} y={positions[i].y}>  </Moveable> </div>) }*/}
 
-    { [...Array(moveables)].map((e, i) =>  <div style={{position: 'absolute', top: 0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </div>) }
+    { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
    
 
