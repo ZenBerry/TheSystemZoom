@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
 import Draggable from 'react-draggable'
 
+import TextareaAutosize from 'react-textarea-autosize';
+
 function Moveable(props) {
 
 	console.log('props.myID', props.id) 
@@ -14,6 +16,7 @@ function Moveable(props) {
     const [justStoppedDragging, setJustStoppedDragging] = useState(false)
     const [dragSocket, setDragSocket] = useState("")
     const [loaded, setLoaded] = useState(false)
+    const [value, setValue] = useState("Hello")
 
     const socket = props.socket
 
@@ -156,6 +159,31 @@ function Moveable(props) {
       
     };
 
+     function handleChange(event){
+
+      const textareaLineHeight = 10
+
+            const previousRows = event.target.rows;
+              event.target.rows = 1; // reset number of rows in textarea 
+            const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+            
+
+            
+
+            
+
+              event.target.rows = currentRows
+
+              setValue(event.value)
+
+
+
+
+
+
+
+     }
+
     return (
 
     	<div>
@@ -163,6 +191,31 @@ function Moveable(props) {
     	<Draggable  position={controlledPosition} onDrag={onControlledDrag} onStop = {handleDragStop} onStart = {handleDragStart} >
 
     	    <div>
+
+          {/*<input autoFocus style={{border:'none'}} type="text" name="name"  autoComplete="off"  />*/}
+
+{/*          <AutosizeInput
+              name="form-field-name"
+              value="Hello"
+              style={{border:'none'}}
+
+          />*/}
+
+          <textarea
+
+
+           rows="1"
+          
+           
+      
+           style={{fontSize:'24px', border: 'none', overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
+           value={value} 
+           onChange={(event) => {handleChange(event)}} 
+
+
+           /> 
+
+
 
     	     <p> Dolya {props.id} </p>
 
