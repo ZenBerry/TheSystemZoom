@@ -18,12 +18,26 @@ function Moveable(props) {
     const [loaded, setLoaded] = useState(false)
     const [value, setValue] = useState("")
     const [stateLargestLine, setStateLargestLine] = useState('100px')
+    const [stateRows, setStateRows] = useState(1)
 
     const socket = props.socket
 
     var i = 0
 
     useEffect(() => {
+
+      socket.on("remote-typing",  (value, atWhichSocket, id, largestLine, rows) => {
+
+        if (atWhichSocket != props.mySocket) {
+          if (id == props.id) {
+            setStateLargestLine((largestLine+20).toString()+"px")
+            setStateRows(rows)
+            setValue(value)
+          }
+        }
+
+
+      })
 
 
 
@@ -53,6 +67,8 @@ function Moveable(props) {
 
     useEffect(() => {
 
+
+
       socket.on('TEST', (positions) => {
 
         console.log('POSITIONS', positions)
@@ -64,8 +80,15 @@ function Moveable(props) {
 
        let { x, y } = Object.values(positions)[props.id]
 
-        setControlledPosition({ x, y })
-        setReceivedPosition({ x, y })
+       setControlledPosition({ x, y })
+       setReceivedPosition({ x, y })
+
+       setStateRows(Object.values(positions)[props.id].rows)
+       setStateLargestLine(Object.values(positions)[props.id].largestLine)
+       setValue(Object.values(positions)[props.id].value)
+
+
+   
 
         setLoaded(true)
 
@@ -168,6 +191,8 @@ function Moveable(props) {
 
      function handleChange(event){
 
+
+
       var largestLine = 0
 
       const textareaLineHeight = 24
@@ -178,12 +203,23 @@ function Moveable(props) {
             
 
             
+            var countNewLines = (event.target.value.match(/\n/g) || []).length;
+             
+              // event.target.rows = currentRows
 
-            
+              event.target.rows = countNewLines+1
+              setStateRows(countNewLines+1)
 
-              event.target.rows = currentRows
+              console.log("CHECK THIS FN VALUE",event.target.value)
+
+              // if ( event.target.rows > event.target.value.split('\n')) {
+              //   event.target.rows = event.target.value.split('\n')
+              // }
+              //setStateRows(currentRows)
 
               function detectLargestLine(){
+
+              
 
               for (i=0; i < event.target.value.split('\n').length; i++) {
 
@@ -254,7 +290,7 @@ function Moveable(props) {
 
 
 
-              
+              socket.emit("typing", event.target.value, props.mySocket, props.id, largestLine, countNewLines+1) 
 
      }
 
@@ -280,20 +316,21 @@ function Moveable(props) {
           <textarea
 
 
-           rows="1"
+           rows={stateRows.toString()}
 
            autoFocus
           
            
       
-           style={{fontSize:'24px', border: '0', backgroundColor: 'rgba(0, 0, 0, 0)', borderColor: 'rgba(0, 0, 0, 0)', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
+           style={{fontSize:'24px', backgroundColor: 'rgba(0, 0, 0, 0)',  borderColor: 'rgba(0, 0, 0, 0)', border: '0', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
            value={value} 
            onChange={(event) => {handleChange(event)}} 
+           onInput={(event) => {handleChange(event)}}
 
 
            /> 
 
-
+          {/*{stateRows}*/}
 
           {/* <p> Dolya {props.id} </p>*/}
 

@@ -30,6 +30,23 @@ io.on("connection", function(socket) {
 
 	var socketID = socket.id	
 
+  socket.on("typing", (value, atWhichSocket, id, largestLine, rows) => {
+
+    positions[id].value = value;
+    positions[id].largestLine = largestLine;
+    positions[id].rows=rows;
+
+    console.log(positions)
+
+    io.emit("remote-typing", value, atWhichSocket, id, largestLine, rows)
+
+   // console.log("VALUE", value, "AT WHICH SOCKET", atWhichSocket, "ID", id)
+
+  }
+
+
+    )
+
 
   
 
@@ -38,37 +55,39 @@ io.on("connection", function(socket) {
   io.to(socket.id).emit("socketInfo", socket.id) //emitting socket id to different clients
 
 
-  if (initial === true) { //finance stuff 
+  // if (initial === true) { //finance stuff 
 
 
 
-  	MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, function(err, db) { 
-  	  if (err) throw err;
-  	  var dbo = db.db("finance");
-  	  var myquery = { Name: "cashTest1" };
-  	  // var newvalues = { $set: {Note : req.body.title} };
+  // 	MongoClient.connect(url, {useUnifiedTopology: true}, { useNewUrlParser: true }, function(err, db) { 
+  // 	  if (err) throw err;
+  // 	  var dbo = db.db("finance");
+  // 	  var myquery = { Name: "cashTest1" };
+  // 	  // var newvalues = { $set: {Note : req.body.title} };
 
 
-  	dbo.collection("finance").find(myquery).toArray(function(err, result) {
-  	  if (err) throw err;
-  	  // // COMMENTED OUT AT 3 AUG console.log(result[0].Value);
+  // 	dbo.collection("finance").find(myquery).toArray(function(err, result) {
+  // 	  if (err) throw err;
+  // 	  // // COMMENTED OUT AT 3 AUG console.log(result[0].Value);
 
-  	  serverData = Number(result[0].Value)
-  	  io.emit("new-remote-operations", serverData, positions);
+  // 	  serverData = Number(result[0].Value)
+  // 	  io.emit("new-remote-operations", serverData, positions);
 
-  	  // // COMMENTED OUT AT 3 AUG console.log(result[0].Name);
-  	  db.close();
+  // 	  // // COMMENTED OUT AT 3 AUG console.log(result[0].Name);
+  // 	  db.close();
   	  
-  	});
+  // 	});
 
-  	});
+  // 	});
 
     
-    initial = false
+  //   initial = false
 
-  } else {
-    io.emit("new-remote-operations", serverData, positions);
-  }
+  // } else {
+  //   io.emit("new-remote-operations", serverData, positions);
+  // }
+
+   io.emit("new-remote-operations", serverData, positions);
 
   socket.on("drag", function(data, moveableId) { 
 
@@ -121,7 +140,7 @@ io.on("connection", function(socket) {
 
     howManyMoveables=moveables
 
-    console.log(moveables)
+   // console.log(moveables)
 
     // positions[moveables-1].x = moveableInitX //saving just-added moveable position to the server
     // positions[moveables-1].y = moveableInitY
