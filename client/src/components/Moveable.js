@@ -17,8 +17,11 @@ function Moveable(props) {
     const [dragSocket, setDragSocket] = useState("")
     const [loaded, setLoaded] = useState(false)
     const [value, setValue] = useState("Hello")
+    const [stateLargestLine, setStateLargestLine] = useState('100px')
 
     const socket = props.socket
+
+    var i = 0
 
     useEffect(() => {
 
@@ -159,9 +162,15 @@ function Moveable(props) {
       
     };
 
+    
+    var largestLineNum = 0
+    var i2=0
+
      function handleChange(event){
 
-      const textareaLineHeight = 10
+      var largestLine = 0
+
+      const textareaLineHeight = 24
 
             const previousRows = event.target.rows;
               event.target.rows = 1; // reset number of rows in textarea 
@@ -173,6 +182,71 @@ function Moveable(props) {
             
 
               event.target.rows = currentRows
+
+              function detectLargestLine(){
+
+              for (i=0; i < event.target.value.split('\n').length; i++) {
+
+                var text = document.createElement("span"); 
+                           document.body.appendChild(text); 
+
+
+                           text.style.fontSize = '24px'
+                           text.style.position = 'absolute';
+                           text.style.visibility = 'hidden';
+                           text.style.height = 'auto';
+                           text.style.width = 'auto';
+                           text.style.whitespace = 'nowrap'; /* Thanks to Herb Caudill comment */
+                 
+                     
+                           text.innerHTML = event.target.value.split('\n')[i];
+
+                           var width = Math.ceil(text.clientWidth); 
+
+                           
+
+                           // text.innerHTML = '';
+
+                
+
+                if (width > largestLine) {
+                    largestLine = width
+                    
+                    largestLineNum = i
+
+                    
+
+
+
+                console.log("LARGEST LINE", largestLine, "NUMBER", largestLineNum)
+                console.log("WIDTH", largestLine)
+
+              }
+
+              setStateLargestLine((largestLine+20).toString()+"px")
+
+              }
+
+            }
+
+              detectLargestLine()
+
+
+             
+
+
+
+
+
+              // for (i = 0; i < event.target.value.length; i++) {
+
+
+              //   // if (event.target.value[i] === '\n' || event.target.value[i] === '\r') {
+              //   //   console.log('found enter key')
+              //   // };
+              // };
+
+             
 
               setValue(event.value)
 
@@ -201,6 +275,8 @@ function Moveable(props) {
 
           />*/}
 
+          {stateLargestLine}
+
           <textarea
 
 
@@ -208,7 +284,7 @@ function Moveable(props) {
           
            
       
-           style={{fontSize:'24px', border: 'none', overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
+           style={{fontSize:'24px', border: '1', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
            value={value} 
            onChange={(event) => {handleChange(event)}} 
 
