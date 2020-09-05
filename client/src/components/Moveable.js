@@ -254,7 +254,7 @@ function Moveable(props) {
 
 
 
-
+              
 
      }
 
@@ -275,7 +275,7 @@ function Moveable(props) {
 
           />*/}
 
-          {stateLargestLine}
+        
 
           <textarea
 
@@ -284,7 +284,7 @@ function Moveable(props) {
           
            
       
-           style={{fontSize:'24px', border: '1', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
+           style={{fontSize:'24px', border: '0', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
            value={value} 
            onChange={(event) => {handleChange(event)}} 
 
