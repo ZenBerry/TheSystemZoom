@@ -16,7 +16,7 @@ function Moveable(props) {
     const [justStoppedDragging, setJustStoppedDragging] = useState(false)
     const [dragSocket, setDragSocket] = useState("")
     const [loaded, setLoaded] = useState(false)
-    const [value, setValue] = useState("Hello")
+    const [value, setValue] = useState("")
     const [stateLargestLine, setStateLargestLine] = useState('100px')
 
     const socket = props.socket
@@ -281,10 +281,12 @@ function Moveable(props) {
 
 
            rows="1"
+
+           autoFocus
           
            
       
-           style={{fontSize:'24px', border: '0', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
+           style={{fontSize:'24px', border: '0', backgroundColor: 'rgba(0, 0, 0, 0)', borderColor: 'rgba(0, 0, 0, 0)', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}
            value={value} 
            onChange={(event) => {handleChange(event)}} 
 
