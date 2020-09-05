@@ -260,6 +260,7 @@ function Moveable(props) {
               }
 
               setStateLargestLine((largestLine+20).toString()+"px")
+              socket.emit("typing", event.target.value, props.mySocket, props.id, largestLine, countNewLines+1) 
 
               }
 
@@ -289,8 +290,7 @@ function Moveable(props) {
 
 
 
-
-              socket.emit("typing", event.target.value, props.mySocket, props.id, largestLine, countNewLines+1) 
+              
 
      }
 
