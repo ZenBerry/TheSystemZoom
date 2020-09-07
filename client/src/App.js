@@ -11,8 +11,8 @@ var connectionOptions =  {
             "transports" : ["websocket"]
         };
 
-const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
-// const socket = io("http://localhost:5000", connectionOptions); //for running locally
+// const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
+const socket = io("http://localhost:5000", connectionOptions); //for running locally
 
 // var io = io_init('http://localhost:5000', {transports: ['websocket', 'polling', 'flashsocket']});
 
@@ -165,8 +165,8 @@ function App () {
 
     console.log("E!", e)
    
-    setMoveableInitX(e.clientX)
-    setMoveableInitY(e.clientY-33)
+    setMoveableInitX(e.pageX) //clientX or screenX
+    setMoveableInitY(e.pageY-33)
 
 
     setMoveables(prev => prev+1)

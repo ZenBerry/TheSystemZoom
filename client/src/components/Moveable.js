@@ -1,3 +1,12 @@
+//TypeError: Cannot read property 'toString' of undefined
+//Moveable
+//src/components/Moveable.js:319
+//  316 | <textarea
+//  317 | 
+//  318 |   
+//> 319 |  rows={stateRows.toString()}
+
+
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
 import Draggable from 'react-draggable'
