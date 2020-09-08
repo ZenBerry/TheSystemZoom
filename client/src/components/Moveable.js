@@ -307,7 +307,7 @@ function Moveable(props) {
 
       <div>
 
-      <Draggable  position={controlledPosition} onDrag={onControlledDrag} onStop = {handleDragStop} onStart = {handleDragStart} >
+      <Draggable defaultPosition={receivedPosition}  position={controlledPosition} onDrag={onControlledDrag} onStop = {handleDragStop} onStart = {handleDragStart} >
 
           <div>
 
