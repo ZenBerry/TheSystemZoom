@@ -145,7 +145,7 @@ io.on("connection", function(socket) {
     // positions[moveables-1].x = moveableInitX //saving just-added moveable position to the server
     // positions[moveables-1].y = moveableInitY
 
-    positions.push({id:moveables-1, x:moveableInitX, y:moveableInitY}) //PAUSED HERE 3 AUG! SEE YA!
+    positions.push({id:moveables-1, x:moveableInitX, y:moveableInitY, largestLine: 0, rows: 1}) //PAUSED HERE 3 AUG! SEE YA!
 
 
 
