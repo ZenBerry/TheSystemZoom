@@ -61,6 +61,8 @@ import Moveable from './components/Moveable'
 
 import InfiniteViewer from "react-infinite-viewer"; //infinite scroll
 
+import panzoom from "panzoom"
+
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'; //default scroll lock
 
 import { MapInteractionCSS } from 'react-map-interaction';
@@ -113,6 +115,11 @@ function App () {
          scale: 1,
          translation: { x: 0, y: 0 }
        })
+
+ const [pinchScroll, setPinchScroll] = useState(false)
+
+ const [pinchOffsetX, setPinchOffsetX] = useState(0)
+ const [pinchOffsetY, setPinchOffsetY] = useState(0)
 
 
 
@@ -260,18 +267,20 @@ function App () {
   document.ondblclick = (e) => handleMoveableAddition(e);
 
 
-
+  var element = document.querySelector('#root')
+  panzoom(element)
 
   return (
+
+
 
    
 
 
-    <div  className="App" style={{userSelect: 'none'}}>
+    <div  className="App"  style={{userSelect: 'none'}}>
 
-
-
-    <InfiniteViewer
+ 
+   {/* <InfiniteViewer
         className="viewer"
         margin={1}
         threshold={1}
@@ -279,32 +288,47 @@ function App () {
         rangeY={[100000000, 100000000]}
         usePinch = {true}
         pinchThreshold = {1}
-        zoom ={zoom}
+        zoom ={1}
 
 
         onScroll = {e => {
 
-        {/* console.log(e)*/}
+
+
+          if (pinchScroll === true ) {
+            e.currentTarget.offsetX = 100000000
+            e.currentTarget.offsetY = 100000000
+            setPinchScroll(false)
+          }
+
+         console.log("SCROLL", e.currentTarget)
 
         }}
 
         onPinch={e => {
 
 
+          console.log("PINCH", e)
+
+
+
+          setPinchOffsetX(e.inputEvent.clientX)
+          setPinchOffsetY(e.inputEvent.clientY)
+
+
           
 
-   
+         setPinchScroll(true)
 
          setZoom(e.zoom*e.scale)  
-         setZoomValue(         {
-                  scale: e.zoom*e.scale,
-                  translation: { x: 0, y: 0 }
-                }
-          )
+
+
+
  
 
 
         }}
+
 
 
         >
@@ -321,16 +345,16 @@ function App () {
 
 
         </div>
-    </InfiniteViewer>
+    </InfiniteViewer>*/}
     
 
 
   
 
+   { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+
+
    
-
-
-
 
 
     </div>
