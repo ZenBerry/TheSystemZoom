@@ -268,7 +268,29 @@ function App () {
 
 
   var element = document.querySelector('#root')
-  panzoom(element)
+  panzoom(element, {
+  beforeMouseDown: function(e) {
+    // allow mouse-down panning only if altKey is down. Otherwise - ignore
+    var shouldIgnore = !e.shiftKey;
+    return shouldIgnore;
+  },
+  beforeWheel: function(e) {
+      // allow wheel-zoom only if altKey is down. Otherwise - ignore
+      var shouldIgnore = !e.altKey;
+      return shouldIgnore;
+    },
+    onTouch: function(e) {
+      // `e` - is current touch event.
+
+      return false; // tells the library to not preventDefault.
+    }
+
+
+
+})
+
+
+
 
   return (
 
@@ -280,7 +302,7 @@ function App () {
     <div  className="App"  style={{userSelect: 'none'}}>
 
  
-   {/* <InfiniteViewer
+    <InfiniteViewer
         className="viewer"
         margin={1}
         threshold={1}
@@ -291,43 +313,9 @@ function App () {
         zoom ={1}
 
 
-        onScroll = {e => {
 
 
 
-          if (pinchScroll === true ) {
-            e.currentTarget.offsetX = 100000000
-            e.currentTarget.offsetY = 100000000
-            setPinchScroll(false)
-          }
-
-         console.log("SCROLL", e.currentTarget)
-
-        }}
-
-        onPinch={e => {
-
-
-          console.log("PINCH", e)
-
-
-
-          setPinchOffsetX(e.inputEvent.clientX)
-          setPinchOffsetY(e.inputEvent.clientY)
-
-
-          
-
-         setPinchScroll(true)
-
-         setZoom(e.zoom*e.scale)  
-
-
-
- 
-
-
-        }}
 
 
 
@@ -345,13 +333,14 @@ function App () {
 
 
         </div>
-    </InfiniteViewer>*/}
+    </InfiniteViewer>
     
 
 
   
 
-   { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+  {/* {  moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}*/}
+
 
 
    
