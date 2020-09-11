@@ -267,17 +267,24 @@ function App () {
   document.ondblclick = (e) => handleMoveableAddition(e);
 
 
-  var element = document.querySelector('#root')
-  panzoom(element)
+
+
+  // var element = document.querySelector('#App0')
+  // panzoom(element)
+
+  // console.log("APP!",document.querySelector('#App0'))
+  //  console.log("ROOT!",document.querySelector('#root'))
 
   return (
 
 
 
    
-
+    <div id="App0">
 
     <div  className="App"  style={{userSelect: 'none'}}>
+
+    
 
  
    {/* <InfiniteViewer
@@ -356,6 +363,8 @@ function App () {
 
    
 
+
+    </div>
 
     </div>
   );
