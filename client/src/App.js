@@ -65,7 +65,8 @@ import panzoom from "panzoom"
 
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'; //default scroll lock
 
-import { MapInteractionCSS } from 'react-map-interaction';
+import { MapInteractionCSS } from 'react-map-interaction'; //zoom
+import { MapInteraction } from 'react-map-interaction'; //zoom
 
 var connectionOptions =  {
             "force new connection" : true,
@@ -113,7 +114,7 @@ function App () {
 
  const [zoomValue, setZoomValue] = useState({
          scale: 1,
-         translation: { x: 0, y: 0 }
+         translation: { x: 500, y: 500 }
        })
 
  const [pinchScroll, setPinchScroll] = useState(false)
@@ -267,27 +268,27 @@ function App () {
   document.ondblclick = (e) => handleMoveableAddition(e);
 
 
-  var element = document.querySelector('#root')
-  panzoom(element, {
-  beforeMouseDown: function(e) {
-    // allow mouse-down panning only if altKey is down. Otherwise - ignore
-    var shouldIgnore = !e.shiftKey;
-    return shouldIgnore;
-  },
-  beforeWheel: function(e) {
-      // allow wheel-zoom only if altKey is down. Otherwise - ignore
-      var shouldIgnore = !e.altKey;
-      return shouldIgnore;
-    },
-    onTouch: function(e) {
-      // `e` - is current touch event.
+//   var element = document.querySelector('#root')
+//   panzoom(element, {
+//   beforeMouseDown: function(e) {
+//     // allow mouse-down panning only if altKey is down. Otherwise - ignore
+//     var shouldIgnore = !e.shiftKey;
+//     return shouldIgnore;
+//   },
+//   beforeWheel: function(e) {
+//       // allow wheel-zoom only if altKey is down. Otherwise - ignore
+//       var shouldIgnore = !e.altKey;
+//       return shouldIgnore;
+//     },
+//     onTouch: function(e) {
+//       // `e` - is current touch event.
 
-      return false; // tells the library to not preventDefault.
-    }
+//       return false; // tells the library to not preventDefault.
+//     }
 
 
 
-})
+// })
 
 
 
@@ -299,7 +300,9 @@ function App () {
    
 
 
-    <div  className="App"  style={{userSelect: 'none'}}>
+    <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
+
+
 
  
     <InfiniteViewer
@@ -311,6 +314,27 @@ function App () {
         usePinch = {true}
         pinchThreshold = {1}
         zoom ={1}
+        onScroll = {e => {
+
+  {/*      console.log("Scroll event",e)
+*/}
+
+
+        }}
+
+        onPinch={e => {
+    
+         setZoom(e.zoom*e.scale)  
+         setZoomValue({
+         scale: zoomValue.scale*e.zoom*e.scale,
+         translation: { x: 0, y: 0 }
+       })
+
+         console.log("PINCHING!")
+
+
+
+        }}
 
 
 
@@ -322,17 +346,32 @@ function App () {
         >
 
 
+         <MapInteractionCSS
 
+        disablePan = {true}
+       
+        value={zoomValue}
+
+
+     
+        onChange={(value) => (console.log("Change in zoom II", value), setZoomValue(value))}
+         maxScale={1000000}
+
+         >
 
         <div style={{height: '100vh'}} >
+
+      
 
 
         { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
-
+     
 
 
         </div>
+
+        </MapInteractionCSS>
     </InfiniteViewer>
     
 
