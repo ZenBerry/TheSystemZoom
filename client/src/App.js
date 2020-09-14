@@ -324,7 +324,7 @@ function App () {
 
         onPinch={e => {
     
-         setZoom(e.zoom*e.scale)  
+         setZoom((prev) => prev* e.zoom*e.scale)  
          setZoomValue({
          scale: zoomValue.scale*e.zoom*e.scale,
          translation: { x: 0, y: 0 }
@@ -336,42 +336,23 @@ function App () {
 
         }}
 
-
-
-
-
-
-
-
         >
 
 
-         <MapInteractionCSS
-
-        disablePan = {true}
-       
-        value={zoomValue}
 
 
-     
-        onChange={(value) => (console.log("Change in zoom II", value), setZoomValue(value))}
-         maxScale={1000000}
-
-         >
-
-        <div style={{height: '100vh'}} >
+        <div style={{height: '100vh' }} >
 
       
 
 
-        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0, transform: 'scale('+zoom+')'}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
      
 
 
         </div>
 
-        </MapInteractionCSS>
     </InfiniteViewer>
     
 
