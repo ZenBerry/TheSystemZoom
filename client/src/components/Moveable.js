@@ -15,7 +15,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 function Moveable(props) {
 
-  console.log('props.myID', props.id) 
+  // console.log('props.myID', props.id) 
 
   // console.log("mySocket FROM COMP", props.mySocket)
 

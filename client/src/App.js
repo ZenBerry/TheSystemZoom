@@ -164,7 +164,7 @@ function App () {
 
           setPositions(positions)  
           setMoveables(howManyMoveables) 
-          console.log("howManyMoveables", howManyMoveables)  
+        //  console.log("howManyMoveables", howManyMoveables)  
           setSum(data)
 
         });
@@ -240,7 +240,7 @@ function App () {
   function handleMoveableAddition (e) {
 
 
-    console.log("E!", e)
+    //console.log("E!", e)
    
     setMoveableInitX(e.clientX) //clientX or screenX
     setMoveableInitY(e.clientY-33)
@@ -302,10 +302,11 @@ function App () {
 
     <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
 
-
+    
 
  
     <InfiniteViewer
+     
         className="viewer"
         margin={1}
         threshold={1}
@@ -313,7 +314,7 @@ function App () {
         rangeY={[100000000, 100000000]}
         usePinch = {true}
         pinchThreshold = {1}
-        zoom ={1}
+ 
         onScroll = {e => {
 
   {/*      console.log("Scroll event",e)
@@ -330,7 +331,10 @@ function App () {
          translation: { x: 0, y: 0 }
        })
 
-         console.log("PINCHING!")
+         console.log("PINCHING!", e.inputEvent.clientX)
+
+         setPinchOffsetX(e.inputEvent.clientX)
+         setPinchOffsetY(e.inputEvent.clientY)
 
 
 
@@ -341,15 +345,18 @@ function App () {
 
 
 
-        <div style={{height: '100vh' }} >
+        <div style={{height: '100vh'}} >
 
-      
+        <div   style={{transform:'scale('+zoom+')' + 'translateX('+zoom*1000+'px)' + 'translateY('+zoom*1000+'px)' , backgroundColor: "white", height: '100vh'}}>
+
+        {/*PAUSED HERE 14 SEP*/}
 
 
-        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0, transform: 'scale('+zoom+')'}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
      
 
+        </div>
 
         </div>
 
@@ -364,7 +371,7 @@ function App () {
 
 
    
-
+  
 
     </div>
   );
