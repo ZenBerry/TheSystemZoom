@@ -122,6 +122,11 @@ function App () {
  const [pinchOffsetX, setPinchOffsetX] = useState(0)
  const [pinchOffsetY, setPinchOffsetY] = useState(0)
 
+ const [isZoomingIn, setIsZoomingIn] = useState(null)
+
+ const [cursorX, setCursorX] = useState(0)
+ const [cursorY, setCursorY] = useState(0)
+
 
 
 
@@ -303,6 +308,11 @@ function App () {
     <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
 
     
+   Offset X {pinchOffsetX} <br/>
+   Offset Y {pinchOffsetY} <br/>
+   Zoom {zoom}  <br/>
+   Cursor X {cursorX}  <br/>
+   Cursor Y {cursorY}  <br/>
 
  
     <InfiniteViewer
@@ -317,24 +327,100 @@ function App () {
  
         onScroll = {e => {
 
-  {/*      console.log("Scroll event",e)
-*/}
+        console.log("Scroll event",e.scrollLeft)
+
+
+
+
+    {/*    setPinchOffsetX(e.scrollLeft)
+        setPinchOffsetY(e.scrollTop)*/}
+
 
 
         }}
 
         onPinch={e => {
+
+          setCursorX(e.inputEvent.clientX)
+          setCursorY(e.inputEvent.clientY)
+
+        {/*  console.log("PINCH E", e.inputEvent.clientX)*/}
+
+          if (e.zoom < 1  ) {
+            console.log('zooming out');
+
+            setIsZoomingIn(false)
+
+            if (zoom > 0.1) {
+
+              console.log('zoom is > 0.1')
+              setPinchOffsetX(prev => prev-10)
+              setPinchOffsetY(prev => prev-10)  
+
+
+
+            }
+
+
+
+
+         {/*   setPinchOffsetX(prev => prev-10)
+            setPinchOffsetY(prev => prev-10)*/}
+
+
+
+
+          } else { 
+
+            console.log('zooming in') ;
+
+            if (zoom > 0.1) {
+
+              console.log('zoom is > 0.1')
+              setPinchOffsetX(prev => prev+10)
+              setPinchOffsetY(prev => prev+10)  
+
+              
+
+            }
+
+
+{/*            if (e.inputEvent.clientX > pinchOffsetX ) {
+
+            setPinchOffsetX(prev => prev+10)
+              
+            } 
+
+            if (e.inputEvent.clientY > pinchOffsetY ) {
+
+            setPinchOffsetY(prev => prev+10)
+              
+            } */}
+
+
+            setIsZoomingIn(true) 
+     
+
+          }
+
+
     
-         setZoom((prev) => prev* e.zoom*e.scale)  
+         setZoom((prev) => (prev* e.zoom*e.scale) 
+
+
+
+
+
+          )  
          setZoomValue({
          scale: zoomValue.scale*e.zoom*e.scale,
          translation: { x: 0, y: 0 }
        })
 
-         console.log("PINCHING!", e.inputEvent.clientX)
-
+         {/*console.log("PINCHING!", e.inputEvent.clientX)*/}
+{/*
          setPinchOffsetX(e.inputEvent.clientX)
-         setPinchOffsetY(e.inputEvent.clientY)
+         setPinchOffsetY(e.inputEvent.clientY)*/}
 
 
 
@@ -347,12 +433,13 @@ function App () {
 
         <div style={{height: '100vh'}} >
 
-        <div   style={{transform:'scale('+zoom+')' + 'translateX('+zoom*1000+'px)' + 'translateY('+zoom*1000+'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div   style={{transform:'scale('+zoom+')' + 'translateX('+ cursorX/2 +'px)' + 'translateY('+ cursorY/2 +'px)' , backgroundColor: "white", height: '100vh'}}>
 
         {/*PAUSED HERE 14 SEP*/}
 
 
         { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+
 
      
 
