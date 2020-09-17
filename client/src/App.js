@@ -307,12 +307,16 @@ function App () {
 
     <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
 
+    <div style= {{zIndex: '1', position: 'absolute'}}>
+
     
    Offset X {pinchOffsetX} <br/>
    Offset Y {pinchOffsetY} <br/>
    Zoom {zoom}  <br/>
    Cursor X {cursorX}  <br/>
    Cursor Y {cursorY}  <br/>
+
+   </div>
 
  
     <InfiniteViewer
