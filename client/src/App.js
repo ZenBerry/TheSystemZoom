@@ -127,6 +127,17 @@ function App () {
  const [cursorX, setCursorX] = useState(0)
  const [cursorY, setCursorY] = useState(0)
 
+ const ref = useRef(null);
+
+ useEffect(() => {
+     console.log('width', ref.current ? ref.current.getBoundingClientRect().width/2 : 0);
+     console.log('height', ref.current ? ref.current.getBoundingClientRect().height/2 : 0);
+
+     setPinchOffsetY(ref.current.offsetWidth)
+     setPinchOffsetX(ref.current.offsetHeight)
+
+   }, [zoom]);
+
 
 
 
@@ -331,7 +342,7 @@ function App () {
  
         onScroll = {e => {
 
-        console.log("Scroll event",e.scrollLeft)
+        console.log("Scroll event",e)
 
 
 
@@ -355,7 +366,7 @@ function App () {
 
             setIsZoomingIn(false)
 
-            if (zoom > 0.1) {
+{/*            if (zoom > 0.1) {
 
               console.log('zoom is > 0.1')
               setPinchOffsetX(prev => prev-10)
@@ -363,7 +374,7 @@ function App () {
 
 
 
-            }
+            }*/}
 
 
 
@@ -378,7 +389,7 @@ function App () {
 
             console.log('zooming in') ;
 
-            if (zoom > 0.1) {
+{/*            if (zoom > 0.1) {
 
               console.log('zoom is > 0.1')
               setPinchOffsetX(prev => prev+10)
@@ -386,7 +397,7 @@ function App () {
 
               
 
-            }
+            }*/}
 
 
 {/*            if (e.inputEvent.clientX > pinchOffsetX ) {
@@ -435,9 +446,9 @@ function App () {
 
 
 
-        <div style={{height: '100vh'}} >
+        <div  style={{height: '100vh'}} >
 
-        <div   style={{transform:'scale('+zoom+')' + 'translateX('+ cursorX/2 +'px)' + 'translateY('+ cursorY/2 +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div  ref={ref} style={{transform:'scale('+zoom+')' + 'translateX('+ (cursorX- pinchOffsetX/2) +'px)' + 'translateY('+ (cursorY - pinchOffsetY/2) +'px)' , backgroundColor: "white", height: '100vh'}}>
 
         {/*PAUSED HERE 14 SEP*/}
 
