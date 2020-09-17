@@ -133,10 +133,12 @@ function App () {
      console.log('width', ref.current ? ref.current.getBoundingClientRect().width/2 : 0);
      console.log('height', ref.current ? ref.current.getBoundingClientRect().height/2 : 0);
 
-     setPinchOffsetY(ref.current.offsetWidth)
-     setPinchOffsetX(ref.current.offsetHeight)
+     setPinchOffsetY(ref.current.getBoundingClientRect().height)
+     setPinchOffsetX(ref.current.getBoundingClientRect().width)
 
-   }, [zoom]);
+     // ref.current.offsetWidth
+
+   }, []);
 
 
 
@@ -448,14 +450,14 @@ function App () {
 
         <div  style={{height: '100vh'}} >
 
-        <div  ref={ref} style={{transform:'scale('+zoom+')' + 'translateX('+ (cursorX- pinchOffsetX/2) +'px)' + 'translateY('+ (cursorY - pinchOffsetY/2) +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div  ref={ref} style={{transform:'scale('+zoom+')' +  'translateX('+ (pinchOffsetX*zoom/2- cursorX) +'px)' + 'translateY('+ (pinchOffsetY*zoom/2 -cursorY) +'px)' , backgroundColor: "white", height: '100vh'}}>
 
         {/*PAUSED HERE 14 SEP*/}
 
 
         { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
-
+        <div style={{transform:  'translateX('+ pinchOffsetX/2 +'px)' + 'translateY('+ pinchOffsetY/2 +'px)'}}> CENTER </div>
      
 
         </div>
