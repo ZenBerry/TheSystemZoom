@@ -70,8 +70,8 @@ function App () {
  const { x, y } = useMousePosition(); //get mouse position 
  const hasMovedCursor = typeof x === "number" && typeof y === "number"; //mouse position again
 
- const [cursorX, setCursorX] = useState(x) //workaround, should be deleted later on
- const [cursorY, setCursorY] = useState(y)
+ const [cursorX, setCursorX] = useState(0) 
+ const [cursorY, setCursorY] = useState(0)
 
  const [startPanX, setStartPanX] = useState(null)
  const [startPanY, setStartPanY] = useState(null) //course "programming panning and zooming, 9:32" We have to update those vars only onPinch
@@ -253,12 +253,17 @@ function App () {
         threshold={1}
         rangeX={[100000000, 100000000]}
         rangeY={[100000000, 100000000]}
-        usePinch = {true}
+
         pinchThreshold = {1}
+
  
         onScroll = {e => {
 
         console.log("Scroll event",e)
+
+
+                  setCursorX(e.scrollLeft)
+                  setCursorY(e.scrollTop)
 
 
 
@@ -269,8 +274,6 @@ function App () {
 
         onPinch={e => {
 
-          setCursorX(e.inputEvent.clientX)
-          setCursorY(e.inputEvent.clientY)
 
         {/*  console.log("PINCH E", e.inputEvent.clientX)*/}
 
@@ -318,14 +321,14 @@ function App () {
 
         <div  style={{height: '100vh'}} >
 
-        <div  ref={ref} style={{transform:'scale('+zoom+')' +  'translateX('+ (pinchOffsetX*zoom/2- cursorX) +'px)' + 'translateY('+ (pinchOffsetY*zoom/2 -cursorY) +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div  ref={ref} style={{transform:'scale('+zoom+')' +  'translateX('+ (isZoomingIn && cursorX+x) +'px)' + 'translateY('+ (isZoomingIn && cursorY+y) +'px)' , backgroundColor: "white", height: '100vh'}}>
 
 
 
 
         { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
-        <div style={{transform:  'translateX('+ pinchOffsetX/2 +'px)' + 'translateY('+ pinchOffsetY/2 +'px)'}}> CENTER </div>
+        {/*<div style={{transform:  'translateX('+ pinchOffsetX/2 +'px)' + 'translateY('+ pinchOffsetY/2 +'px)'}}> CENTER </div>*/}
      
 
         </div>
