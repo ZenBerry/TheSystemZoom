@@ -16,6 +16,7 @@
     "react-map-interaction": "^2.0.0",
     "react-scripts": "^3.4.3",
     "react-textarea-autosize": "^8.2.0",
+    "react-use-gesture": "^7.0.16",
     "react-zoom": "^0.3.1"
   },
   "scripts": {
