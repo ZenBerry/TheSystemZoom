@@ -5,7 +5,7 @@ import useMousePosition from './components/useMousePosition'
 
 
 
-import InfiniteViewer from "react-infinite-viewer"; //infinite scroll
+
 
 
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'; //default scroll lock
@@ -28,19 +28,23 @@ function App () {
  const [zoom, setZoom] = useState(1)
 
 
- const [pinchScroll, setPinchScroll] = useState(false)
 
- const [pinchOffsetX, setPinchOffsetX] = useState(0)
- const [pinchOffsetY, setPinchOffsetY] = useState(0)
 
- const [isZoomingIn, setIsZoomingIn] = useState(null)
 
  const { x, y } = useMousePosition(); //get mouse position 
-
  const hasMovedCursor = typeof x === "number" && typeof y === "number"; //mouse position again
 
  const [cursorX, setCursorX] = useState(0) 
  const [cursorY, setCursorY] = useState(0)
+
+ const [fOffsetX, setFOffsetX] = useState(0) 
+ const [fOffsetY, setFOffsetY] = useState(0)
+
+ const [fWorldX, setFWorldX] = useState(0) //world space coordinates
+ const [fWorldY, setFWorldY] = useState(0)
+
+ const [nScreenX, setNScreenX] = useState(0) //screen space coordinates
+ const [nScreenY, setNScreenY] = useState(0)
 
  const [startPanX, setStartPanX] = useState(null)
  const [startPanY, setStartPanY] = useState(null) //course "programming panning and zooming, 9:32" We have to update those vars only onPinch
@@ -48,19 +52,27 @@ function App () {
  const ref = useRef(null);
 
  useEffect(() => {
-     console.log('SCREEN H', ref.current ? ref.current.offsetHeight : 0);
-     // console.log('cursor from the world y', ref.current ? y-ref.current.getBoundingClientRect().y : 0);
+     console.log('SCREEN H', ref.current ? ref.current.offsetHeight/2 : 0);
 
-    
+     setFOffsetX(-ref.current.offsetWidth/2)
+     setFOffsetY(-ref.current.offsetHeight/2) //finding the center of the screen. The offset is negative!
 
-     
 
-     setPinchOffsetY( -(ref.current.getBoundingClientRect().y + ref.current.getBoundingClientRect().height / 2))
-     setPinchOffsetX(-(ref.current.getBoundingClientRect().x + ref.current.getBoundingClientRect().width / 2))
+   }, []);
 
-     // ref.current.offsetWidth
+  function WorldToScreen(fWorldX, fWorldY) {
 
-   }, [x, y]);
+    setNScreenX(fWorldX- fOffsetX)
+    setNScreenY(fWorldY- fOffsetY)
+
+  }
+
+  function ScreenToWorld(nScreenX, nScreenY) {
+
+    setFWorldX(nScreenX+fOffsetX)
+    setFWorldY(nScreenY+fOffsetY)
+
+  }
 
   return (
 
@@ -72,120 +84,13 @@ function App () {
     <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
 
     <div style= {{zIndex: '1', position: 'absolute'}}>
+    </div>
 
+    <div ref={ref} style = {{transform: 'translateX('+ -fOffsetX +'px)' + 'translateY('+ -fOffsetY +'px)',  height: '100vh' }}>
     
-   Offset X {pinchOffsetX} <br/>
-   Offset Y {pinchOffsetY} <br/>
-   Zoom {zoom}  <br/>
-   {hasMovedCursor
-           ? (`Your cursor is at ${x}, ${y}.`)
-           : "Move your mouse around."} <br/>
+    Hello
 
-   cursorX {cursorX} <br/>
-   cursorY {cursorY} <br/>
-
-
-
-
-
-
-   </div>
-
- 
-    <InfiniteViewer
-     
-        className="viewer"
-        margin={1}
-        threshold={1}
-        rangeX={[100000000, 100000000]}
-        rangeY={[100000000, 100000000]}
-
-        pinchThreshold = {1}
-
- 
-        onScroll = {e => {
-
-        console.log("Scroll event",e)
-
-
-                  setCursorX(e.scrollLeft)
-                  setCursorY(e.scrollTop)
-
-
-
-
-
-
-        }}
-
-        onPinch={e => {
-
-
-
-          if (e.zoom < 1  ) {
-            console.log('zooming out');
-
-            setIsZoomingIn(false)
-
-
-          } else { 
-
-            console.log('zooming in') ;
-
-
-
-            setIsZoomingIn(true) 
-     
-
-          }
-
-
-    
-         setZoom((prev) => (prev* e.zoom*e.scale) 
-
-
-
-
-
-          )  
-
-
-
-
-
-        }}
-
-        >
-
-
-
-
-        <div  style={{height: '100vh'}} >
-
-        <div  ref={ref} style={{transform:'scale('+zoom+')' +  'translateX('+ pinchOffsetX*zoom+ 1280/2  + x +'px)' + 'translateY('+ pinchOffsetY*zoom+ 698/2 +y +'px)' , backgroundColor: "white", height: '100vh'}}> 
-
-
-
-
-      
-       Hello
-
-        </div>
-
-        </div>
-
-    </InfiniteViewer>
-    
-
-
-  
-
-  
-
-
-
-   
-  
+    </div>
 
     </div>
   );
