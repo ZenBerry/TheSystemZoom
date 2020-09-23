@@ -76,18 +76,25 @@ function App () {
  const [startPanX, setStartPanX] = useState(null)
  const [startPanY, setStartPanY] = useState(null) //course "programming panning and zooming, 9:32" We have to update those vars only onPinch
 
+ const [diffX, setDiffX] = useState(0) //important! Diff between the mouse and the dot
+ const [diffY, setDiffY] = useState(0) //important! Diff between the mouse and the dot
+
  const ref = useRef(null);
 
  useEffect(() => {
-     console.log('cursor from the world x', ref.current ? x-ref.current.getBoundingClientRect().x : 0);
-     console.log('cursor from the world y', ref.current ? y-ref.current.getBoundingClientRect().y : 0);
+     console.log('Point diff X', ref.current ? ref.current.getBoundingClientRect().x-x : 0);
+     console.log('Point diff Y', ref.current ? ref.current.getBoundingClientRect().y-y : 0);
 
-     setPinchOffsetY(ref.current.getBoundingClientRect().height)
-     setPinchOffsetX(ref.current.getBoundingClientRect().width)
+     setDiffX(ref.current.getBoundingClientRect().x-x)
+     setDiffY(ref.current.getBoundingClientRect().y-y)
+
+
+     // setPinchOffsetY(ref.current.getBoundingClientRect().height)
+     // setPinchOffsetX(ref.current.getBoundingClientRect().width)
 
      // ref.current.offsetWidth
 
-   }, [x, y]);
+   }, [zoom]);
 
 
 
@@ -212,7 +219,21 @@ function App () {
 }
   document.ondblclick = (e) => handleMoveableAddition(e);
 
-
+ var circleStyle = {
+      position:'absolute',
+      transform:'scale('+ (-0.3) +')', //set scale the opposite to zoom like 0.something
+      top: y,
+      left: x,
+      padding:5,
+      margin:5,
+      display:"inline-block",
+      backgroundColor: 'black',
+      borderRadius: "50%",
+      width:1,
+      height:1,
+    };
+ 
+ 
 
 
 
@@ -225,20 +246,30 @@ function App () {
 
     <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
 
-    <div style= {{zIndex: '1', position: 'absolute'}}>
+
+
+    <div style= {{zIndex: '1', position: 'absolute'}}> //floating div
 
     
-   Offset X {pinchOffsetX} <br/>
-   Offset Y {pinchOffsetY} <br/>
+{/*   Offset X {pinchOffsetX} <br/>
+   Offset Y {pinchOffsetY} <br/>*/}
    Zoom {zoom}  <br/>
    {hasMovedCursor
            ? (`Your cursor is at ${x}, ${y}.`)
            : "Move your mouse around."} <br/>
 
-   cursorX {cursorX} <br/>
-   cursorY {cursorY} <br/>
 
 
+
+    Diff X {diffX}        
+    Diff Y {diffY}        
+
+{/*   cursorX {cursorX} <br/>
+   cursorY {cursorY} <br/>*/}
+
+{/*   <div style={circleStyle}>
+   </div>
+*/}
 
 
 
@@ -321,8 +352,10 @@ function App () {
 
         <div  style={{height: '100vh'}} >
 
-        <div  ref={ref} style={{transform:'scale('+zoom+')' +  'translateX('+ (isZoomingIn && cursorX+x) +'px)' + 'translateY('+ (isZoomingIn && cursorY+y) +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' , backgroundColor: "white", height: '100vh'}}>
 
+        <div ref={ref} style={circleStyle}>
+        </div>
 
 
 
