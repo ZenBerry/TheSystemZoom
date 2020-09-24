@@ -262,10 +262,12 @@ function App () {
 
 
     Diff X {diffX}        
-    Diff Y {diffY}        
+    Diff Y {diffY}    
 
-{/*   cursorX {cursorX} <br/>
-   cursorY {cursorY} <br/>*/}
+    <br/>    
+
+   Scroll X {cursorX} <br/>
+   Scroll Y {cursorY} <br/>
 
 {/*   <div style={circleStyle}>
    </div>
@@ -352,14 +354,14 @@ function App () {
 
         <div  style={{height: '100vh'}} >
 
-        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ 0 +'px)' + 'translateY('+ 0 +'px)' , backgroundColor: "white", height: '100vh'}}>
 
         <div ref={ref} style={circleStyle}>
         </div>
 
 
 
-        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0-diffY, left: 0-diffX}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
         {/*<div style={{transform:  'translateX('+ pinchOffsetX/2 +'px)' + 'translateY('+ pinchOffsetY/2 +'px)'}}> CENTER </div>*/}
      
