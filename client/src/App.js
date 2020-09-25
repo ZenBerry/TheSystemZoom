@@ -221,9 +221,9 @@ function App () {
 
  var circleStyle = {
       position:'absolute',
-      transform:'scale('+ (-0.3) +')', //set scale the opposite to zoom like 0.something
-      top: y,
-      left: x,
+      transform:'scale('+ (1/zoom) +')', //set scale the opposite to zoom like 0.something
+      top: y/zoom,
+      left: x/zoom,
       padding:5,
       margin:5,
       display:"inline-block",
@@ -361,7 +361,7 @@ function App () {
 
 
 
-        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0-diffY, left: 0-diffX}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
+        { moveables > -1 && ( [...Array(moveables)].map((e, i) =>  <span style={{position: 'absolute', top:0, left: 0}}>  <Moveable  socket={socket} mySocket={mySocket} id = {i}  x={moveableInitX} y={moveableInitY}>  </Moveable> </span>) )}
 
         {/*<div style={{transform:  'translateX('+ pinchOffsetX/2 +'px)' + 'translateY('+ pinchOffsetY/2 +'px)'}}> CENTER </div>*/}
      
