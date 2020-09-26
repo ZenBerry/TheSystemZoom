@@ -85,8 +85,8 @@ function App () {
      console.log('Point diff X', ref.current ? ref.current.getBoundingClientRect().x-x : 0);
      console.log('Point diff Y', ref.current ? ref.current.getBoundingClientRect().y-y : 0);
 
-     setDiffX(ref.current.getBoundingClientRect().x-x)
-     setDiffY(ref.current.getBoundingClientRect().y-y)
+     setDiffX(ref.current.getBoundingClientRect().x-5-x)
+     setDiffY(ref.current.getBoundingClientRect().y-5-y)
 
 
      // setPinchOffsetY(ref.current.getBoundingClientRect().height)
@@ -94,7 +94,7 @@ function App () {
 
      // ref.current.offsetWidth
 
-   }, [zoom]);
+   }, [zoom, cursorX, cursorY]);
 
 
 
@@ -221,9 +221,9 @@ function App () {
 
  var circleStyle = {
       position:'absolute',
-      transform:'scale('+ (1/zoom) +')', //set scale the opposite to zoom like 0.something
-      top: y/zoom,
-      left: x/zoom,
+ //set scale the opposite to zoom like 0.something
+      top: y,
+      left: x,
       padding:5,
       margin:5,
       display:"inline-block",
