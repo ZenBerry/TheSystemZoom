@@ -12,6 +12,13 @@ html {
   -moz-user-select: none;
 }
 
+canvas {
+  height: 100vh;
+  background-color: #ffcc00;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 #root {
   display: flex;
   align-items: center;

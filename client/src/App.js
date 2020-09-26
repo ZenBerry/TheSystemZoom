@@ -22,7 +22,7 @@ var connectionOptions =  {
 // const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
 const socket = io("http://localhost:5000", connectionOptions); //for running locally
 
-
+let ctx = null;
 
 function App () {
 
@@ -81,12 +81,54 @@ function App () {
 
  const ref = useRef(null);
 
+ //CANVAS
+
+     const canvas = useRef();
+     
+
+     const drawLine = (info, style = {}) => {
+       const { x, y, x1, y1 } = info;
+       const { color = 'black', width = 1 } = style;
+      
+       ctx.beginPath();
+       ctx.moveTo(x, y);
+       ctx.lineTo(x1, y1);
+       ctx.strokeStyle = color;
+       ctx.lineWidth = width;
+       ctx.stroke();
+     }
+
+ 
+
+     useEffect(() => {
+       // dynamically assign the width and height to canvas
+       const canvasEle = canvas.current;
+       canvasEle.width = 800;
+       canvasEle.height = 800;
+     
+       // get context of the canvas
+       ctx = canvasEle.getContext("2d");
+
+
+
+
+     }, []);
+
+     useEffect(() => {
+       drawLine({ x: 0, y: 0, x1: x, y1: y });
+
+       console.log("Diff from DrawLine: ", diffY)
+
+     }, [zoom,x,y]);
+
+
+
  useEffect(() => {
      console.log('Point diff X', ref.current ? ref.current.getBoundingClientRect().x-x : 0);
      console.log('Point diff Y', ref.current ? ref.current.getBoundingClientRect().y-y : 0);
 
-     setDiffX(ref.current.getBoundingClientRect().x-5-x)
-     setDiffY(ref.current.getBoundingClientRect().y-5-y)
+     setDiffX(  (ref.current.getBoundingClientRect().x-5-x) / zoom   )
+     setDiffY(  (ref.current.getBoundingClientRect().y-5-y) / zoom   )
 
 
      // setPinchOffsetY(ref.current.getBoundingClientRect().height)
@@ -94,7 +136,7 @@ function App () {
 
      // ref.current.offsetWidth
 
-   }, [zoom, cursorX, cursorY]);
+   }, [zoom]);
 
 
 
@@ -248,12 +290,14 @@ function App () {
 
 
 
-    <div style= {{zIndex: '1', position: 'absolute'}}> //floating div
+    <div style= {{zIndex: '1', position: 'absolute', height: '100vh'}}> 
+
+    <canvas ref={canvas}></canvas>
 
     
 {/*   Offset X {pinchOffsetX} <br/>
    Offset Y {pinchOffsetY} <br/>*/}
-   Zoom {zoom}  <br/>
+{/*   Zoom {zoom}  <br/>
    {hasMovedCursor
            ? (`Your cursor is at ${x}, ${y}.`)
            : "Move your mouse around."} <br/>
@@ -268,6 +312,8 @@ function App () {
 
    Scroll X {cursorX} <br/>
    Scroll Y {cursorY} <br/>
+
+ */}
 
 {/*   <div style={circleStyle}>
    </div>
@@ -354,10 +400,15 @@ function App () {
 
         <div  style={{height: '100vh'}} >
 
+
+
         <div   style={{transform:'scale('+zoom+')' +  'translateX('+ 0 +'px)' + 'translateY('+ 0 +'px)' , backgroundColor: "white", height: '100vh'}}>
 
         <div ref={ref} style={circleStyle}>
         </div>
+
+
+       
 
 
 
