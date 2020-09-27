@@ -80,6 +80,21 @@ function App () {
  const [diffY, setDiffY] = useState(0) //important! Diff between the mouse and the dot
 
  const ref = useRef(null);
+ const mainDiv = useRef();
+
+ const [circleStyle, setCircleStyle] = useState({ //the point
+      position:'absolute',
+ //set scale the opposite to zoom like 0.something
+      top: y,
+      left: x,
+      padding:5,
+      margin:5,
+      display:"inline-block",
+      backgroundColor: 'black',
+      borderRadius: "50%",
+      width:1,
+      height:1,
+    })
 
  //CANVAS
 
@@ -101,10 +116,30 @@ function App () {
  
 
      useEffect(() => {
+
+      setCircleStyle({ //the point
+      position:'absolute',
+      //set scale the opposite to zoom like 0.something
+      top: (y + cursorY),
+      left: (x + cursorX),
+      padding:5,
+      margin:5,
+      display:"inline-block",
+      backgroundColor: 'black',
+      borderRadius: "50%",
+      width:1,
+      height:1,
+    })
+
+
+      
+
+      
+
        // dynamically assign the width and height to canvas
        const canvasEle = canvas.current;
-       canvasEle.width = 800;
-       canvasEle.height = 800;
+       canvasEle.width = mainDiv.current.getBoundingClientRect().width; //or probably window.width? (I don't remember the exact syntax)
+       canvasEle.height = mainDiv.current.getBoundingClientRect().height;
      
        // get context of the canvas
        ctx = canvasEle.getContext("2d");
@@ -112,23 +147,25 @@ function App () {
 
 
 
-     }, []);
+     }, [x,y, zoom, cursorX, cursorY]);
 
      useEffect(() => {
-       drawLine({ x: 0, y: 0, x1: x, y1: y });
+       drawLine({ x: ref.current.getBoundingClientRect().x, y: ref.current.getBoundingClientRect().y, x1: x, y1: y });
 
        console.log("Diff from DrawLine: ", diffY)
 
-     }, [zoom,x,y]);
+     }, [zoom,x,y, cursorX, cursorY]);
 
 
 
- useEffect(() => {
+ useEffect(() => {  
      console.log('Point diff X', ref.current ? ref.current.getBoundingClientRect().x-x : 0);
      console.log('Point diff Y', ref.current ? ref.current.getBoundingClientRect().y-y : 0);
 
-     setDiffX(  (ref.current.getBoundingClientRect().x-5-x) / zoom   )
-     setDiffY(  (ref.current.getBoundingClientRect().y-5-y) / zoom   )
+     setDiffX(  (x-ref.current.getBoundingClientRect().x)   ) // /zoom?
+     setDiffY(  (y-ref.current.getBoundingClientRect().y)   )
+
+
 
 
      // setPinchOffsetY(ref.current.getBoundingClientRect().height)
@@ -261,19 +298,7 @@ function App () {
 }
   document.ondblclick = (e) => handleMoveableAddition(e);
 
- var circleStyle = {
-      position:'absolute',
- //set scale the opposite to zoom like 0.something
-      top: y,
-      left: x,
-      padding:5,
-      margin:5,
-      display:"inline-block",
-      backgroundColor: 'black',
-      borderRadius: "50%",
-      width:1,
-      height:1,
-    };
+
  
  
 
@@ -286,13 +311,15 @@ function App () {
    
 
 
-    <div  className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
+    <div ref={mainDiv} className="App"  style={{userSelect: 'none', overflow: 'visible'}}>
 
 
-
-    <div style= {{zIndex: '1', position: 'absolute', height: '100vh'}}> 
-
+    <div style= {{zIndex: '1',  pointerEvents: 'none', position: 'absolute', height: '100vh'}}> 
+    Scroll X {cursorX} <br/>
+    Scroll Y {cursorY} <br/>
     <canvas ref={canvas}></canvas>
+
+
 
     
 {/*   Offset X {pinchOffsetX} <br/>
@@ -323,6 +350,7 @@ function App () {
 
 
    </div>
+
 
  
     <InfiniteViewer
