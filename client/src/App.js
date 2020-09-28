@@ -82,19 +82,7 @@ function App () {
  const ref = useRef(null);
  const mainDiv = useRef();
 
- const [circleStyle, setCircleStyle] = useState({ //the point
-      position:'absolute',
- //set scale the opposite to zoom like 0.something
-      top: y,
-      left: x,
-      padding:5,
-      margin:5,
-      display:"inline-block",
-      backgroundColor: 'black',
-      borderRadius: "50%",
-      width:1,
-      height:1,
-    })
+ const [circleStyle, setCircleStyle] = useState(null)
 
  //CANVAS
 
@@ -103,13 +91,13 @@ function App () {
 
      const drawLine = (info, style = {}) => {
        const { x, y, x1, y1 } = info;
-       const { color = 'black', width = 1 } = style;
+
       
        ctx.beginPath();
        ctx.moveTo(x, y);
        ctx.lineTo(x1, y1);
-       ctx.strokeStyle = color;
-       ctx.lineWidth = width;
+       ctx.strokeStyle = 'black';
+       ctx.lineWidth = 1;
        ctx.stroke();
      }
 
@@ -122,13 +110,13 @@ function App () {
       //set scale the opposite to zoom like 0.something
       top: (y + cursorY),
       left: (x + cursorX),
-      padding:5,
-      margin:5,
+      padding:0,
+      margin:0,
       display:"inline-block",
       backgroundColor: 'black',
       borderRadius: "50%",
-      width:1,
-      height:1,
+      width:0.5,
+      height:0.5,
     })
 
 
@@ -150,7 +138,7 @@ function App () {
      }, [x,y, zoom, cursorX, cursorY]);
 
      useEffect(() => {
-       drawLine({ x: ref.current.getBoundingClientRect().x, y: ref.current.getBoundingClientRect().y, x1: x, y1: y });
+       drawLine({ x: x, y: y-35, x1: ref.current.getBoundingClientRect().x, y1: ref.current.getBoundingClientRect().y-35 });
 
        console.log("Diff from DrawLine: ", diffY)
 
@@ -162,8 +150,8 @@ function App () {
      console.log('Point diff X', ref.current ? ref.current.getBoundingClientRect().x-x : 0);
      console.log('Point diff Y', ref.current ? ref.current.getBoundingClientRect().y-y : 0);
 
-     setDiffX(  (x-ref.current.getBoundingClientRect().x)   ) // /zoom?
-     setDiffY(  (y-ref.current.getBoundingClientRect().y)   )
+     setDiffX(  (ref.current.getBoundingClientRect().x) - x   ) // /zoom?
+     setDiffY(  ( (ref.current.getBoundingClientRect().y-35) - (y-35)  )   )
 
 
 
@@ -430,7 +418,7 @@ function App () {
 
 
 
-        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ 0 +'px)' + 'translateY('+ 0 +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' , backgroundColor: "white", height: '100vh'}}>
 
         <div ref={ref} style={circleStyle}>
         </div>
