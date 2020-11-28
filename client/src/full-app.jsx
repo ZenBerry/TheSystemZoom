@@ -25,7 +25,7 @@
 
 function App () {
 
- // Zoom and pan vars, forJay: those are related to the problem
+ // Zoom and pan vars, forAndy: those are related to the problem
 
 		 const [zoom, setZoom] = useState(1) //initial scale
 
@@ -42,8 +42,20 @@ function App () {
 
 		 const circle = useRef();
 		 const mainDiv = useRef();
+		 const whiteBox = useRef();	
 
-		 const [circleStyle, setCircleStyle] = useState(null) //the point
+		 const [circleStyle, setCircleStyle] = useState({ 
+	      position:'absolute',
+	      top: (y + scrollY),
+	      left: (x + scrollX),
+	      padding:0,
+	      margin:0,
+	      display:"inline-block",
+	      backgroundColor: 'black',
+	      borderRadius: "50%",
+	      width:0.5,
+	      height:0.5,
+	     }) //the point
 
  // Drag vars 
 
@@ -76,7 +88,7 @@ function App () {
 
  	  const [formValue, setFormValue] = useState("")
 
- // Canvas (forJay: it's used to draw a line)
+ // Canvas (forAndy: it's used to draw a line)
 
      const canvas = useRef();
      
@@ -93,22 +105,32 @@ function App () {
        ctx.stroke();
      }
 
+     useEffect(() => {  
+
+     	   setCircleStyle({ 
+     	   position:'absolute',
+     	   top: (y), //was +scrollY
+     	   left: (x),//was +scrollX
+     	   padding:0,
+     	   margin:0,
+     	   backgroundColor: 'black',
+     	   borderRadius: "0",
+     	   width:0,
+     	   height:0,
+     		 })
+
+
+
+
+       }, [x,y, zoom]); //update the point relative to the cursor. 11 NOV IMPORTANT: Here's the problem: it doesn't update!
+
+
+
  
 
      useEffect(() => {
-      // forJay: the point	
-      setCircleStyle({ 
-      position:'absolute',
-      top: (y + scrollY),
-      left: (x + scrollX),
-      padding:0,
-      margin:0,
-      display:"inline-block",
-      backgroundColor: 'black',
-      borderRadius: "50%",
-      width:0.5,
-      height:0.5,
-   	 })
+      // forAndy: the point	
+
 
 
       
@@ -116,6 +138,8 @@ function App () {
       
 
        // dynamically assign the width and height to canvas
+       // THE CANVAS USED FOR A LINE (!)
+
        const canvasEle = canvas.current;
        canvasEle.width = mainDiv.current.getBoundingClientRect().width; //or probably window.width? (I don't remember the exact syntax)
        canvasEle.height = mainDiv.current.getBoundingClientRect().height;
@@ -128,29 +152,30 @@ function App () {
 
      }, [x,y, zoom, scrollX, scrollY]);
 
-     // useEffect(() => { //enbale to draw the line
+     useEffect(() => { 
 
-     //   // forJay: drawing a line between the cursor and the point: 
-     //   drawLine({ x: x, y: y, x1: circle.current.getBoundingClientRect().x, y1: circle.current.getBoundingClientRect().y });
+       // forAndy: drawing a line between the cursor and the point: 
+       drawLine({ x: x, y: y, x1: circle.current.getBoundingClientRect().x, y1: circle.current.getBoundingClientRect().y });
+       // (circle.current.getBoundingClientRect().y)
+       // (circle.current.getBoundingClientRect().x) //IMPORTANT, POINT COORDINATES
+       // console.log("Diff from DrawLine: ", diffY)
 
-     //   // console.log("Diff from DrawLine: ", diffY)
+     }, [zoom,x,y, scrollX, scrollY]);
 
-     // }, [zoom,x,y, scrollX, scrollY]);
-
- // forJay: setting the difference between our point and the cursor
+ // forAndy: setting the difference between our point and the cursor
 
 	 useEffect(() => {  
 
+	     setDiffX(  circle.current ? circle.current.getBoundingClientRect().x-x : 0   ) 
+	     setDiffY(  circle.current ? circle.current.getBoundingClientRect().y-y : 0   )
 	     // console.log('Point diff X', circle.current ? circle.current.getBoundingClientRect().x-x : 0);
 	     // console.log('Point diff Y', circle.current ? circle.current.getBoundingClientRect().y-y : 0);
 
-	     setDiffX(  circle.current ? circle.current.getBoundingClientRect().x-x : 0   ) 
-	     setDiffY(  circle.current ? circle.current.getBoundingClientRect().y-y : 0   )
 
 
-	   }, [zoom]);
+	   }, [zoom, scrollX, scrollY]); //11 NOV IMPORTANT: it works smoother if we add x and y dependencies
 
- // forJay: the code below is not related to the problem 
+ // forAndy: the code below is not related to the problem 
 
 
 					  useEffect(() => {
@@ -279,8 +304,8 @@ function App () {
 
     {/*Info floating div*/} 
 
-{/*	    <div style= {{zIndex: '2',  pointerEvents: 'none', position: 'absolute', height: '100vh'}}> 
-
+	    <div style= {{zIndex: '2',  pointerEvents: 'none', color:'white', position: 'absolute', height: '100vh'}}> 
+	    	It works! 11 Nov <br/>
 	        Zoom {zoom}  <br/>
 	        {hasMovedCursor ? (`Your cursor is at ${x}, ${y}.`) : "Move your mouse around."}  <br/>
 	        Diff X {diffX}   <br/>     
@@ -288,7 +313,15 @@ function App () {
 	        Scroll X {scrollX} <br/>
 	        Scroll Y {scrollY} <br/>
 
-	     </div>   */}
+	        The Point x {x + scrollX} <br/> 
+	        The Point y {y + scrollY} <br/>
+
+	        {/*Our point on a floating div for testing*/}
+
+			{/*<div ref={circle} style={circleStyle}> 
+	        </div>*/}
+
+	     </div>   
 
 	{/*Canvas floating div (it's used to draw a line)*/} 
 
@@ -343,14 +376,20 @@ function App () {
 
 	        <div  style={{height: '100vh'}} >
 
-	        	<div style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' , height: '100vh'}}>
+	        	<div ref = {whiteBox} style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' }}>
 
-{/*	        		<div ref={circle} style={circleStyle}> The point
-	        		</div>*/}
+	        			{/*forAndy: the point*/}
 
-	        		{/*forJay: moveable content*/} 
+	        			<div ref={circle} style={circleStyle}> 
+	        	        </div>
 
-	        		{ moveables > -1 && ( [...Array(moveables)].map((e, i) =>  
+
+              <img src={'https://m.media-amazon.com/images/M/MV5BNzI4ODdkMzMtMjAxZi00OThlLTkxNDMtYmE2MDAyOTgyYWE0XkEyXkFqcGdeQXVyODU5ODY0ODc@._V1_SX400_CR0,0,400,302_AL_.jpg'} />
+                 
+
+	        		{/*forAndy: commented out moveable content*/} 
+
+                {/*{ moveables > -1 && ( [...Array(moveables)].map((e, i) =>  
 	        			
 	        			<span style={{position: 'absolute', top:0, left: 0}}> 
 
@@ -364,13 +403,15 @@ function App () {
 
 	    				</span>) 
 
-	        		)}
+	        		)}*/}
 
 	        	</div>
 
 	        </div>
 
 	    </InfiniteViewer>
+
+
    
     </div>
   );
