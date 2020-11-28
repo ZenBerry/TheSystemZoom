@@ -16,7 +16,7 @@
 		            "transports" : ["websocket"]
 		        };
 
-		const socket = io("https://finance-test-websockets.herokuapp.com/", connectionOptions); //for running online
+		const socket = io("https://portfolio-zenberry.herokuapp.com/", connectionOptions); //for running online
 		// const socket = io("http://localhost:5000", connectionOptions); //for running locally
 
  // The var to create a canvas (it's used to draw a line)
