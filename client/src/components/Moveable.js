@@ -28,6 +28,7 @@ function Moveable(props) {
     const [value, setValue] = useState("")
     const [stateLargestLine, setStateLargestLine] = useState('100px')
     const [stateRows, setStateRows] = useState(1)
+    const [autoFocus, setAutoFocus] = useState(false)
 
     const socket = props.socket
 
@@ -38,10 +39,11 @@ function Moveable(props) {
       socket.on("remote-typing",  (value, atWhichSocket, id, largestLine, rows) => {
 
         if (atWhichSocket != props.mySocket) {
-          if (id == props.id) {
+          if (id == props.id) { //checking if the changes are happening on our machine
             setStateLargestLine((largestLine+20).toString()+"px")
             setStateRows(rows)
             setValue(value)
+            setAutoFocus(true)
           }
         }
 
@@ -327,7 +329,7 @@ function Moveable(props) {
 
            rows={stateRows.toString()}
 
-           autoFocus
+           autoFocus = {autoFocus}
           
            
       
