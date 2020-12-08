@@ -32,6 +32,8 @@ function Moveable(props) {
 
     const socket = props.socket
 
+    const textareaRef = useRef(null);
+
     var i = 0
 
       useEffect(() => {
@@ -43,10 +45,11 @@ function Moveable(props) {
          console.log("MY SOCKET", props.mySocket)
 
          if (socketID == props.mySocket ) {
-            setAutoFocus(true)
-         } else { 
-          setAutoFocus(false)
-         }
+          if (textareaRef != null){
+            textareaRef.current.focus()
+
+          }
+         } 
 
 
 
@@ -346,11 +349,12 @@ function Moveable(props) {
 
           <textarea
 
+          ref = {textareaRef}
+
 
            rows={stateRows.toString()}
 
-           autoFocus = {autoFocus}
-          
+           
            
       
            style={{fontSize:'24px', backgroundColor: 'rgba(0, 0, 0, 0)',  borderColor: 'rgba(0, 0, 0, 0)', border: '0', width: stateLargestLine, overflow:'hidden', resize: 'none', outline:"0px", fontFamily: "Arial"}}

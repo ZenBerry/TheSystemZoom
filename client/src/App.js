@@ -137,12 +137,12 @@ function App () {
 
      }, [x,y, zoom, cursorX, cursorY]);
 
-     useEffect(() => {
-       drawLine({ x: x, y: y-35, x1: ref.current.getBoundingClientRect().x, y1: ref.current.getBoundingClientRect().y-35 });
+     // useEffect(() => {
+     //   drawLine({ x: x, y: y-35, x1: ref.current.getBoundingClientRect().x, y1: ref.current.getBoundingClientRect().y-35 });
 
-       console.log("Diff from DrawLine: ", diffY)
+     //   console.log("Diff from DrawLine: ", diffY)
 
-     }, [zoom,x,y, cursorX, cursorY]);
+     // }, [zoom,x,y, cursorX, cursorY]);
 
 
 
