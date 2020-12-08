@@ -28,10 +28,32 @@ function Moveable(props) {
     const [value, setValue] = useState("")
     const [stateLargestLine, setStateLargestLine] = useState('100px')
     const [stateRows, setStateRows] = useState(1)
+    const [autoFocus, setAutoFocus] = useState(false)
 
     const socket = props.socket
 
     var i = 0
+
+      useEffect(() => {
+
+      socket.on('remoteAddMoveables', (moveables, moveableInitX, moveableInitY, socketID) => {
+
+
+         console.log("CREATED ON THIS SOCKET", socketID)
+         console.log("MY SOCKET", props.mySocket)
+
+         if (socketID == props.mySocket ) {
+            setAutoFocus(true)
+         } else { 
+          setAutoFocus(false)
+         }
+
+
+
+      });
+
+
+      }, []);
 
     useEffect(() => {
 
@@ -327,7 +349,7 @@ function Moveable(props) {
 
            rows={stateRows.toString()}
 
-           autoFocus
+           autoFocus = {autoFocus}
           
            
       

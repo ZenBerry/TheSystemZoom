@@ -171,7 +171,7 @@ function App () {
 
     disableBodyScroll(document.querySelector(".App"))
 
-    socket.on('remoteAddMoveables', (moveables, moveableInitX, moveableInitY) => {
+    socket.on('remoteAddMoveables', (moveables, moveableInitX, moveableInitY, socketID) => {
 
       setMoveableInitX(moveableInitX)
       setMoveableInitY(moveableInitY)

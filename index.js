@@ -140,7 +140,7 @@ io.on("connection", function(socket) {
 
     howManyMoveables=moveables
 
-   // console.log(moveables)
+   console.log(socketID)
 
     // positions[moveables-1].x = moveableInitX //saving just-added moveable position to the server
     // positions[moveables-1].y = moveableInitY
@@ -155,7 +155,7 @@ io.on("connection", function(socket) {
     // COMMENTED OUT AT 3 AUG console.log("ADD MOVEABLES EMITTED")
     // COMMENTED OUT AT 3 AUG console.log("HOW MANY MOV. FROM ADD MOV.",howManyMoveables)
 
-  	io.emit("remoteAddMoveables", moveables, moveableInitX, moveableInitY);
+  	io.emit("remoteAddMoveables", moveables, moveableInitX, moveableInitY, socketID);
 
 
 
