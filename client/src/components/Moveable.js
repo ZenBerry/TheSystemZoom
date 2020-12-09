@@ -46,7 +46,9 @@ function Moveable(props) {
 
          if (socketID == props.mySocket ) {
           if (textareaRef != null){
+            console.log("TEXT AREA", textareaRef)
             textareaRef.current.focus()
+
 
           }
          } 
@@ -56,7 +58,7 @@ function Moveable(props) {
       });
 
 
-      }, []);
+      }, [textareaRef]);
 
     useEffect(() => {
 
@@ -349,7 +351,7 @@ function Moveable(props) {
 
           <textarea
 
-          ref = {textareaRef}
+          ref={textareaRef} 
 
 
            rows={stateRows.toString()}
