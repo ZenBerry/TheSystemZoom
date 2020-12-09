@@ -45,9 +45,11 @@ function Moveable(props) {
          console.log("MY SOCKET", props.mySocket)
 
          if (socketID == props.mySocket ) {
-          if (textareaRef != null){
-            console.log("TEXT AREA", textareaRef)
-            textareaRef.current.focus()
+          if (textareaRef.current != null){
+            console.log("TEXT AREA", textareaRef);
+          
+
+            textareaRef.current.focus();
 
 
           }
