@@ -115,8 +115,8 @@ function App () {
       display:"inline-block",
       backgroundColor: 'black',
       borderRadius: "50%",
-      width:0.5,
-      height:0.5,
+      width:0, //I made it invisible
+      height:0,
     })
 
 
@@ -303,8 +303,8 @@ function App () {
 
 
     <div style= {{zIndex: '1',  pointerEvents: 'none', position: 'absolute', height: '100vh'}}> 
-    Scroll X {cursorX} <br/>
-    Scroll Y {cursorY} <br/>
+{/*    Scroll X {cursorX} <br/>
+    Scroll Y {cursorY} <br/>*/}
     <canvas ref={canvas}></canvas>
 
 
@@ -418,7 +418,7 @@ function App () {
 
 
 
-        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' , backgroundColor: "white", height: '100vh'}}>
+        <div   style={{transform:'scale('+zoom+')' +  'translateX('+ diffX +'px)' + 'translateY('+ diffY +'px)' , backgroundColor: "#e8d6be", height: '100vh'}}>
 
         <div ref={ref} style={circleStyle}>
         </div>
